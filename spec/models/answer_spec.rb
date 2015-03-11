@@ -7,5 +7,5 @@ describe Answer do
   it { should respond_to :body }
   it { should respond_to :question_id }
   it { should belong_to :question }
-
+  it { should validate_presence_of :body}
 end
