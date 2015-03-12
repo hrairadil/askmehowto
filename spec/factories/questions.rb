@@ -12,5 +12,10 @@ FactoryGirl.define do
         create_list(:answer, evaluator.number_of_answers, question: question)
       end
     end
+
+    trait :with_wrong_attributes do
+      title nil
+      body nil
+    end
   end
 end
