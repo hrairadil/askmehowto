@@ -24,5 +24,8 @@ describe AnswersController do
       expect(assigns(:answer)).to eq answer
     end
 
+    it 'renders :show view' do
+      expect(response).to render_template :show
+    end
   end
 end
