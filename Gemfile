@@ -31,5 +31,7 @@ end
 
 group :test do
   gem 'shoulda-matchers', require: false
+  gem 'capybara'
+  gem 'launchy'
 end
 

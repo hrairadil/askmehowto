@@ -3,6 +3,19 @@ require 'rails_helper'
 describe QuestionsController do
   let(:question) { create :question }
 
+  describe 'GET #index' do
+    let(:questions) { create_list :question, 2 }
+    before { get :index }
+
+    it 'assigns the list of all questions to @questions' do
+      expect(assigns(:questions)).to eq questions
+    end
+
+    it 'renders index view' do
+      expect(response).to render_template :index
+    end
+  end
+
   describe 'GET #show' do
     before { get :show, id: question }
 
