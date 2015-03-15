@@ -8,7 +8,7 @@ FactoryGirl.define do
         number_of_answers 10
       end
 
-      after(:build) do |question, evaluator|
+      after(:create) do |question, evaluator|
         create_list(:answer, evaluator.number_of_answers, question: question)
       end
     end

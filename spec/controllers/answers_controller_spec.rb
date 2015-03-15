@@ -1,8 +1,20 @@
 require 'rails_helper'
 
 describe AnswersController do
-  let(:question) { create :question }
+  let(:question) { create :question, :with_answers }
   let(:answer) { create :answer, question: question }
+
+  describe 'GET #index' do
+    before { get :index, question_id: question }
+
+    it 'assigns question.answers to @answers' do
+      expect(assigns(:question).answers).to eq question.answers
+    end
+
+    it 'renders index view' do
+      expect(response).to render_template :index
+    end
+  end
 
   describe 'GET #new' do
 
@@ -16,6 +28,7 @@ describe AnswersController do
       expect(response).to render_template :new
     end
   end
+
 
   describe 'GET #show' do
     before { get :show, question_id: question, id: answer}
