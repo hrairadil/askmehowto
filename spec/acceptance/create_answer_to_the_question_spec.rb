@@ -5,5 +5,7 @@ feature 'User tries to create answer to the question', %q{
   As a user
   I want to be able to create an answer to the question
 } do
-  scenario 'User tries to write an answer to the question'
+  scenario 'User tries to write an answer to the question' do
+
+  end
 end

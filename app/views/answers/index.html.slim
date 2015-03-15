@@ -1,7 +1,11 @@
-h1 = @question.title
-p = @question.body
 
-h2 Answers
-div.answers
+h1.question-title
+  = @question.title
+.question-body
+  = @question.body
+
+h3 Answers
+.answers
   = @question.answers.each do |answer|
-    = answer.body
+    div.answer-body
+      = answer.body

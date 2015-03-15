@@ -1,7 +1,9 @@
 h1 All questions
 
-div.questions
+.questions
   = @questions.each do |question|
-    = question.title
-    = question.body
+    .question-title
+      = question.title
+    .question-body
+      = question.body
 
