@@ -6,13 +6,13 @@ feature 'User browses a list of questions', %q{
   I want to be able to see a list of existing questions
 } do
 
-  given(:questions){ create_list(:question, 2) }
+  given(:questions){ create_list(:question, 5) }
 
   scenario 'Guest tries to browse a list of questions' do
     visit questions_path(questions)
-    expect(page).to have_content questions[0].title
-    expect(page).to have_content questions[0].body
-    expect(page).to have_content questions[1].title
-    expect(page).to have_content questions[1].body
+    questions.each do |question|
+      expect(page).to have_content question.title
+      expect(page).to have_content question.body
+    end
   end
 end
