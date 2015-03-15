@@ -16,8 +16,10 @@ class AnswersController < ApplicationController
   def create
     @answer = @question.answers.new(answer_params)
     if @answer.save
+      flash[:success] = 'The answer has been successfully submitted.'
       redirect_to question_answers_path(@question)
     else
+      flash[:danger] = 'Unable to submit the answer!'
       render :new
     end
 

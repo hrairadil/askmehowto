@@ -15,8 +15,10 @@ class QuestionsController < ApplicationController
     @question = Question.new(question_params)
 
     if @question.save
+      flash[:success] = 'Question has been successfully created!'
       redirect_to @question
     else
+      flash[:danger] = 'Can not create your question! Parameters are invalid!'
       render :new
     end
   end
