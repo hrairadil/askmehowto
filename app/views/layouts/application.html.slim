@@ -9,4 +9,6 @@ html
     .container
       - flash.each do |key, value|
         = content_tag(:div, value, class: "alert alert-#{key}")
+      /p.notice = notice
+      /p.alert = alert
       = yield

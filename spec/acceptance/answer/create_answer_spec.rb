@@ -5,10 +5,9 @@ feature 'User tries to create an answer to the question', %q{
   As a user
   I want to be able to create an answer to the question
 } do
-
   given(:question) { create :question }
 
-  scenario 'User tries to write an answer to the question' do
+  scenario 'Authenticated user tries to write an answer to the question' do
     visit new_question_answer_path(question)
 
     fill_in 'Body', with: 'This is the best answer ever!'
@@ -18,7 +17,7 @@ feature 'User tries to create an answer to the question', %q{
     expect(page).to have_content 'This is the best answer ever!'
   end
 
-  scenario 'User tries to write an empty answer to the question' do
+  scenario 'Unauthenticated user tries to write an empty answer to the question' do
     visit new_question_answer_path(question)
 
     fill_in 'Body', with: ' '
@@ -26,4 +25,7 @@ feature 'User tries to create an answer to the question', %q{
 
     expect(page).to have_content 'Unable to submit the answer!'
   end
+
+
+  scenario 'Unauthenticated user tries to create an answer'
 end
