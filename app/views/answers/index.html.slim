@@ -1,11 +1,10 @@
 
-h1.question-title
-  = @question.title
-.question-body
-  = @question.body
+h1= @question.title
+p= @question.body
 
 h3 Answers
-.answers
-  = @question.answers.each do |answer|
-    div.answer-body
-      = answer.body
+- @question.answers.each do |answer|
+  p= answer.body
+
+-if user_signed_in?
+  p= link_to 'Answer the question', new_question_answer_path
