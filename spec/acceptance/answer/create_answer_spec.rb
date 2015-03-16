@@ -28,8 +28,9 @@ feature 'User tries to create an answer to the question', %q{
     expect(page).to have_content 'Unable to submit the answer!'
   end
 
-
   scenario 'Unauthenticated user tries to create an answer' do
+    visit question_answers_path(question)
+    expect(page).not_to have_link 'Answer the question'
     visit new_question_answer_path(question)
     expect(page).to have_content 'You need to sign in or sign up before continuing.'
     expect(current_path).to eq new_user_session_path

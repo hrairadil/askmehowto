@@ -33,6 +33,8 @@ feature 'Create question', %q{
   end
 
   scenario 'Unauthenticated user tries to create a question' do
+    visit questions_path
+    expect(page).not_to have_link 'Ask question'
     visit new_question_path
     expect(page).to have_content 'You need to sign in or sign up before continuing.'
     expect(current_path).to eq new_user_session_path
