@@ -1,7 +1,7 @@
 h1 All questions
 
 .questions
-  = @questions.each do |question|
+  - @questions.each do |question|
     .question-title
       = question.title
     .question-body

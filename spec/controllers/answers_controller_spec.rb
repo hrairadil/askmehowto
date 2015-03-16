@@ -17,6 +17,7 @@ describe AnswersController do
   end
 
   describe 'GET #new' do
+    sign_in_user
 
     before { get :new, question_id: question}
 
@@ -43,6 +44,8 @@ describe AnswersController do
   end
 
   describe 'POST #create' do
+    sign_in_user
+
     context 'when valid attributes' do
       it 'saves a new answer to the database' do
         expect { post :create, question_id: question, answer: attributes_for(:answer) }
