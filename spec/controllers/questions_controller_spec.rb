@@ -85,7 +85,7 @@ describe QuestionsController do
 
       it 'renders index view' do
         delete :destroy, id: authors_question
-        expect(response).to redirect_to root_path
+        expect(response).to redirect_to questions_path
       end
     end
 
@@ -97,7 +97,7 @@ describe QuestionsController do
 
       it 'renders show view' do
         delete :destroy, id: another_user.questions.first
-        expect(page).to render_template :show, id: another_user.questions.first
+        expect(response).to redirect_to another_user.questions.first
       end
     end
   end

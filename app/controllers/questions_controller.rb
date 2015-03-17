@@ -29,10 +29,10 @@ class QuestionsController < ApplicationController
     if @question.user_id == current_user.id
       @question.destroy
       flash[:success] = 'Question has been successfully deleted!'
-      redirect_to root_path
+      redirect_to questions_path
     else
       flash[:danger] = "Can not delete question"
-      redirect_to :show, @question
+      redirect_to @question
     end
   end
 
