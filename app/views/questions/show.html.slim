@@ -1,4 +1,3 @@
 h1 = @question.title
-.row
-  .span6.col-xs-offset-3
-    p = @question.body
+p= @question.body
+p= link_to 'Delete question', question_path, method: :delete

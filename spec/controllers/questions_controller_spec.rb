@@ -47,21 +47,57 @@ describe QuestionsController do
 
     context 'with valid attributes' do
       it 'saves a new question to the database' do
-        expect { post :create, question: attributes_for(:question) }.to change(Question, :count).by(1)
+        expect { post :create, question: attributes_for(:question) }
+                               .to change(@user.questions, :count).by(1)
       end
+
       it 'redirects to show view' do
         post :create, question: attributes_for(:question)
         expect(response).to redirect_to question_path(assigns(:question))
       end
     end
+
     context 'with invalid attributes' do
       it 'does not save question to the database' do
         expect { post :create, question: attributes_for(:question, :with_wrong_attributes) }
-            .to_not change(Question, :count)
+            .to_not change(@user.questions, :count)
       end
+
       it 'renders new view' do
         post :create, question: attributes_for(:question, :with_wrong_attributes)
         expect(response).to render_template :new
+      end
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    sign_in_user
+
+    let!(:authors_question) { create :question, user: @user }
+    let!(:another_user) { create :user, :with_questions }
+
+    context "author's question" do
+
+      it 'deletes authors question from the database' do
+        expect { delete :destroy, id: authors_question }
+            .to change(@user.questions, :count).by(-1)
+      end
+
+      it 'renders index view' do
+        delete :destroy, id: authors_question
+        expect(response).to redirect_to root_path
+      end
+    end
+
+    context "another user's question" do
+      it "does not delete another user's question" do
+        expect { delete :destroy, id: another_user.questions.first }
+                                  .to_not change(another_user.questions, :count)
+      end
+
+      it 'renders show view' do
+        delete :destroy, id: another_user.questions.first
+        expect(page).to render_template :show, id: another_user.questions.first
       end
     end
   end

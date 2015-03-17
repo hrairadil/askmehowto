@@ -1,8 +1,7 @@
 class AnswersController < ApplicationController
-  before_action :set_question, only: [:index, :new, :show, :create]
   before_action :authenticate_user!, except: [:index,:show]
-  def index
-  end
+  before_action :set_question, only: [:index, :new, :show, :create]
+
 
   def new
     @answer = @question.answers.new
