@@ -5,11 +5,11 @@ feature 'Delete question', %q{
   As an author
   I want to be able to delete question
 } do
-  given!(:author) { create :user, :with_questions }
-  given!(:another_user) { create :user, :with_questions }
+  given(:author) { create :user, :with_questions }
+  given(:another_user) { create :user, :with_questions }
 
 
-  scenario 'Author tries to delete his question' do
+  scenario 'Author tries to delete his own question' do
     sign_in(author)
     visit question_path(author.questions.first)
     click_on 'Delete question'
@@ -22,6 +22,7 @@ feature 'Delete question', %q{
     visit question_path(another_user.questions.first)
     expect(page).not_to have_link 'Delete question'
   end
+
   scenario 'Guest tries to delete a question' do
     visit question_path(author.questions.first)
     expect(page).not_to have_link 'Delete question'

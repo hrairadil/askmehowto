@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :answer do
     sequence(:body)  { |n| "Answer's body #{n}" }
     question
+    user
 
     trait :with_wrong_attributes do
       body nil
