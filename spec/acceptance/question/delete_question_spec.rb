@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'Delete answer', %q{
+feature 'Delete question', %q{
   In order to be able to get rid of unnecessary question
   As an author
   I want to be able to delete question
@@ -17,6 +17,13 @@ feature 'Delete answer', %q{
     expect(current_path).to eq questions_path
   end
 
-  scenario 'Author tries to delete another users question'
-  scenario 'Guest tries to delete a question'
+  scenario 'Author tries to delete another users question' do
+    sign_in(author)
+    visit question_path(another_user.questions.first)
+    expect(page).not_to have_link 'Delete question'
+  end
+  scenario 'Guest tries to delete a question' do
+    visit question_path(author.questions.first)
+    expect(page).not_to have_link 'Delete question'
+  end
 end

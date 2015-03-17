@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-feature 'Delete question', %q{
-  In order to be able to get rid of unnecessary question
+feature 'Delete answer', %q{
+  In order to be able to get rid of unnecessary answer
   As an author
   I want to be able to delete answer
 } do
