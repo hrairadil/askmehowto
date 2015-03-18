@@ -1,0 +1,12 @@
+h1= @question.title
+p= @question.body
+
+h3 Answers
+- @question.answers.each do |answer|
+  p= answer.body
+
+  -if answer.user == current_user
+    = link_to 'Delete answer',  question_answer_path(@question, answer), method: :delete
+
+-if user_signed_in?
+  p= link_to 'Answer the question', new_question_answer_path
