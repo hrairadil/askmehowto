@@ -35,25 +35,39 @@ describe AnswersController do
 
     context 'when valid attributes' do
       it 'saves a new answer to the database' do
-        expect { post :create, question_id: question, user_id: @user, answer: attributes_for(:answer) }
-                              .to change(question.answers, :count).by(1)
+        expect { post :create, answer: attributes_for(:answer),
+                               question_id: question,
+                               user_id: @user,
+                               format: :js }
+            .to change(question.answers, :count).by(1)
 
       end
 
-      it 'redirects to question show view' do
-        post :create, question_id: question, user_id: @user, answer: attributes_for(:answer)
-        expect(response).to redirect_to question_path(question)
+      it 'renders create template' do
+        post :create, { answer: attributes_for(:answer),
+                      question_id: question,
+                      user_id: @user,
+                      format: :js }
+
+        expect(response).to render_template :create
       end
     end
 
     context 'when invalid attributes' do
       it 'does not save a new answer to the database' do
-        expect { post :create, question_id: question, answer: attributes_for(:answer, :with_wrong_attributes)}
-                              .to_not change(Answer, :count)
+        expect { post :create, answer: attributes_for(:answer, :with_wrong_attributes),
+                               question_id: question,
+                               user_id: @user,
+                               format: :js }
+            .to_not change(Answer, :count)
       end
-      it 'redirects to question show view' do
-        post :create, question_id: question, answer: attributes_for(:answer, :with_wrong_attributes)
-        expect(response).to redirect_to question_path(question)
+
+      it 'renders create template' do
+        post :create, { answer: attributes_for(:answer, :with_wrong_attributes),
+                        question_id: question,
+                        user_id: @user,
+                        format: :js }
+        expect(response).to render_template :create
       end
     end
   end

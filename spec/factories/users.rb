@@ -1,8 +1,8 @@
 FactoryGirl.define do
   factory :user do
     sequence(:email) { |n| "user#{n}@test.com" }
-    password '12345678'
-    password_confirmation '12345678'
+    password '12345678qwerty'
+    password_confirmation '12345678qwerty'
 
     trait :with_questions do
       transient do
