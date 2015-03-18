@@ -12,11 +12,11 @@ class AnswersController < ApplicationController
     @answer = @question.answers.new(answer_params)
     @answer.user = current_user
     if @answer.save
-      redirect_to question_answers_path(@question),
+      redirect_to question_path(@answer.question),
                   notice: 'The answer has been successfully submitted.'
     else
-      flash.now[:alert] = 'Unable to submit the answer!'
-      render :new
+      redirect_to question_path(@answer.question),
+                  alert: 'Unable to submit the answer!'
     end
 
   end

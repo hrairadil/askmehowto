@@ -40,20 +40,20 @@ describe AnswersController do
 
       end
 
-      it 'renders index view' do
+      it 'redirects to question show view' do
         post :create, question_id: question, user_id: @user, answer: attributes_for(:answer)
-        expect(response).to redirect_to question_answers_path(question)
+        expect(response).to redirect_to question_path(question)
       end
     end
 
     context 'when invalid attributes' do
       it 'does not save a new answer to the database' do
         expect { post :create, question_id: question, answer: attributes_for(:answer, :with_wrong_attributes)}
-                              .to_not change(question.answers, :count)
+                              .to_not change(Answer, :count)
       end
-      it 'redirects to answers new action' do
+      it 'redirects to question show view' do
         post :create, question_id: question, answer: attributes_for(:answer, :with_wrong_attributes)
-        expect(response).to render_template :new
+        expect(response).to redirect_to question_path(question)
       end
     end
   end
