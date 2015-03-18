@@ -12,10 +12,10 @@ class AnswersController < ApplicationController
     @answer = @question.answers.new(answer_params)
     @answer.user = current_user
     if @answer.save
-      flash[:success] = 'The answer has been successfully submitted.'
-      redirect_to question_answers_path(@question)
+      redirect_to question_answers_path(@question),
+                  notice: 'The answer has been successfully submitted.'
     else
-      flash[:danger] = 'Unable to submit the answer!'
+      flash.now[:alert] = 'Unable to submit the answer!'
       render :new
     end
 
@@ -23,12 +23,11 @@ class AnswersController < ApplicationController
 
   def destroy
     if @answer.user == current_user
-      @answer.destroy
-      flash[:success] = 'Answer has been successfully deleted!'
-      redirect_to question_answers_path(@question)
+      @answer.destroy!
+      redirect_to question_answers_path(@question),
+                  notice: 'Answer has been successfully deleted!'
     else
-      flash[:danger] = 'This action is restricted!'
-      redirect_to @question
+      redirect_to @question, notice: 'This action is restricted!'
     end
   end
 

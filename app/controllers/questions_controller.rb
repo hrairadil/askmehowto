@@ -17,22 +17,19 @@ class QuestionsController < ApplicationController
     @question = current_user.questions.new(question_params)
 
     if @question.save
-      flash[:success] = 'Question has been successfully created!'
-      redirect_to @question
+      redirect_to @question, notice: 'Question has been successfully created!'
     else
-      flash[:danger] = 'Can not create your question! Parameters are invalid!'
+      flash.now[:alert] = 'Can not create your question! Parameters are invalid!'
       render :new
     end
   end
 
   def destroy
     if @question.user == current_user
-      @question.destroy
-      flash[:success] = 'Question has been successfully deleted!'
-      redirect_to questions_path
+      @question.destroy!
+      redirect_to questions_path, notice: 'Question has been successfully deleted!'
     else
-      flash[:danger] = "Can not delete question"
-      redirect_to @question
+      redirect_to @question, alert: 'Can not delete question'
     end
   end
 
