@@ -29,7 +29,6 @@ feature 'Create question', %q{
     fill_in 'Title', with: ' '
     fill_in 'Body', with: ' '
     click_on 'Create'
-    save_and_open_page
     expect(page).to have_content 'Can not create your question! Parameters are invalid!'
   end
 
