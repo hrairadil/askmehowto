@@ -3,78 +3,67 @@ require 'rails_helper'
 describe AnswersController do
   let(:question) { create :question }
   let(:answer) { create :answer, question: question }
-
-  describe 'GET #index' do
-    before { get :index, question_id: question }
-
-    it 'assigns question.answers to @answers' do
-      expect(assigns(:question).answers).to eq question.answers
-    end
-
-    it 'renders index view' do
-      expect(response).to render_template :index
-    end
-  end
-
-  describe 'GET #new' do
-    sign_in_user
-
-    before { get :new, question_id: question}
-
-    it 'assigns Answer.new to @answer' do
-      expect(assigns(:answer)).to be_a_new(Answer)
-    end
-
-    it 'renders new view' do
-      expect(response).to render_template :new
-    end
-  end
+  let(:user) { create :user }
 
   describe 'POST #create' do
-    sign_in_user
+    before { sign_in(user) }
 
     context 'when valid attributes' do
       it 'saves a new answer to the database' do
-        expect { post :create, question_id: question, user_id: @user, answer: attributes_for(:answer) }
-                              .to change(question.answers, :count).by(1)
+        expect { post :create, answer: attributes_for(:answer),
+                               question_id: question,
+                               user_id: user,
+                               format: :js }
+            .to change(question.answers, :count).by(1)
 
       end
 
-      it 'renders index view' do
-        post :create, question_id: question, user_id: @user, answer: attributes_for(:answer)
-        expect(response).to redirect_to question_answers_path(question)
+      it 'renders create template' do
+        post :create, { answer: attributes_for(:answer),
+                      question_id: question,
+                      user_id: user,
+                      format: :js }
+
+        expect(response).to render_template :create
       end
     end
 
     context 'when invalid attributes' do
       it 'does not save a new answer to the database' do
-        expect { post :create, question_id: question, answer: attributes_for(:answer, :with_wrong_attributes)}
-                              .to_not change(question.answers, :count)
+        expect { post :create, answer: attributes_for(:answer, :with_wrong_attributes),
+                               question_id: question,
+                               user_id: user,
+                               format: :js }
+            .to_not change(Answer, :count)
       end
-      it 'redirects to answers new action' do
-        post :create, question_id: question, answer: attributes_for(:answer, :with_wrong_attributes)
-        expect(response).to render_template :new
+
+      it 'renders create template' do
+        post :create, { answer: attributes_for(:answer, :with_wrong_attributes),
+                        question_id: question,
+                        user_id: user,
+                        format: :js }
+        expect(response).to render_template :create
       end
     end
   end
 
   describe 'DELETE #destroy' do
-    sign_in_user
+    before { sign_in(user) }
 
     let!(:another_user) { create :user }
-    let!(:authors_answer) { create :answer, question: question, user: @user }
+    let!(:authors_answer) { create :answer, question: question, user: user }
     let!(:another_users_answer) { create :answer, question: question, user: another_user }
 
     context "author's answer" do
 
       it 'deletes authors answer from the database' do
         expect { delete :destroy, id: authors_answer, question_id: question }
-            .to change(@user.answers, :count).by(-1)
+            .to change(user.answers, :count).by(-1)
       end
 
       it 'renders index view' do
         delete :destroy, id: authors_answer, question_id: question
-        expect(response).to redirect_to question_answers_path(question)
+        expect(response).to redirect_to question
       end
     end
 

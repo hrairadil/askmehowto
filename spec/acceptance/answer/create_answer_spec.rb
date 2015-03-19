@@ -5,35 +5,23 @@ feature 'User tries to create an answer to the question', %q{
   As a user
   I want to be able to create an answer to the question
 } do
-  given(:question) { create :question }
-  given(:user) { create :user }
-  scenario 'Authenticated user tries to write an answer to the question' do
+  given!(:user) { create :user }
+  given!(:question) { create :question }
+
+  scenario 'Authenticated user tries to write an answer to the question', js: true do
     sign_in(user)
-    visit question_answers_path(question)
-    click_on 'Answer the question'
-    fill_in 'Body', with: 'This is the best answer ever!'
+    visit question_path(question)
+    fill_in 'Your answer', with: 'This is the best answer ever!'
     click_on 'Create answer'
-
-    expect(page).to have_content 'The answer has been successfully submitted.'
-    expect(page).to have_content 'This is the best answer ever!'
-  end
-
-  scenario 'Authenticated user tries to write an empty answer to the question' do
-    sign_in(user)
-    visit question_answers_path(question)
-    click_on 'Answer the question'
-    fill_in 'Body', with: ' '
-    click_on 'Create answer'
-
-    expect(page).to have_content 'Unable to submit the answer!'
+    expect(current_path).to eq question_path(question)
+    within '.answers' do
+      expect(page).to have_content 'This is the best answer ever!'
+    end
   end
 
   scenario 'Unauthenticated user tries to create an answer' do
-    visit question_answers_path(question)
+    visit question_path(question)
     expect(page).not_to have_link 'Answer the question'
-    visit new_question_answer_path(question)
-    expect(page).to have_content 'You need to sign in or sign up before continuing.'
-    expect(current_path).to eq new_user_session_path
+    expect(page).not_to have_field 'Your answer'
   end
-
 end

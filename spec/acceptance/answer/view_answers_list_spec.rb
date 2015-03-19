@@ -8,7 +8,7 @@ feature 'User browses a question and a list of answers', %q{
   given(:question) { create :question, :with_answers, number_of_answers: 5 }
   scenario 'User tries to browse a question and its answers' do
 
-    visit question_answers_path(question)
+    visit question_path(question)
 
     question.answers.each do |answer|
       expect(page).to have_content answer.body
