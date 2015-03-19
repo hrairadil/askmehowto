@@ -2,6 +2,7 @@
 
 describe QuestionsController do
   let(:question) { create :question }
+  let(:user) { create :user }
 
   describe 'GET #index' do
     let(:questions) { create_list :question, 2 }
@@ -34,7 +35,7 @@ describe QuestionsController do
   end
 
   describe 'GET #new' do
-    sign_in_user
+    before{ sign_in(user) }
 
     before { get :new }
 
@@ -48,12 +49,12 @@ describe QuestionsController do
   end
 
   describe 'POST #create' do
-    sign_in_user
+    before { sign_in(user) }
 
     context 'with valid attributes' do
       it 'saves a new question to the database' do
         expect { post :create, question: attributes_for(:question) }
-                               .to change(@user.questions, :count).by(1)
+                               .to change(user.questions, :count).by(1)
       end
 
       it 'redirects to show view' do
@@ -65,7 +66,7 @@ describe QuestionsController do
     context 'with invalid attributes' do
       it 'does not save question to the database' do
         expect { post :create, question: attributes_for(:question, :with_wrong_attributes) }
-            .to_not change(@user.questions, :count)
+            .to_not change(user.questions, :count)
       end
 
       it 'renders new view' do
@@ -76,16 +77,16 @@ describe QuestionsController do
   end
 
   describe 'DELETE #destroy' do
-    sign_in_user
+    before { sign_in(user) }
 
-    let!(:authors_question) { create :question, user: @user }
+    let!(:authors_question) { create :question, user: user }
     let!(:another_user) { create :user, :with_questions }
 
     context "author's question" do
 
       it 'deletes authors question from the database' do
         expect { delete :destroy, id: authors_question }
-            .to change(@user.questions, :count).by(-1)
+            .to change(user.questions, :count).by(-1)
       end
 
       it 'renders index view' do

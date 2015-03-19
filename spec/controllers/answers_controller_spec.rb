@@ -3,7 +3,7 @@ require 'rails_helper'
 describe AnswersController do
   let(:question) { create :question }
   let(:answer) { create :answer, question: question }
-
+  let(:user) { create :user }
   describe 'GET #index' do
     before { get :index, question_id: question }
 
@@ -17,8 +17,7 @@ describe AnswersController do
   end
 
   describe 'GET #new' do
-    sign_in_user
-
+    before { sign_in(user) }
     before { get :new, question_id: question}
 
     it 'assigns Answer.new to @answer' do
@@ -31,13 +30,13 @@ describe AnswersController do
   end
 
   describe 'POST #create' do
-    sign_in_user
+    before { sign_in(user) }
 
     context 'when valid attributes' do
       it 'saves a new answer to the database' do
         expect { post :create, answer: attributes_for(:answer),
                                question_id: question,
-                               user_id: @user,
+                               user_id: user,
                                format: :js }
             .to change(question.answers, :count).by(1)
 
@@ -46,7 +45,7 @@ describe AnswersController do
       it 'renders create template' do
         post :create, { answer: attributes_for(:answer),
                       question_id: question,
-                      user_id: @user,
+                      user_id: user,
                       format: :js }
 
         expect(response).to render_template :create
@@ -57,7 +56,7 @@ describe AnswersController do
       it 'does not save a new answer to the database' do
         expect { post :create, answer: attributes_for(:answer, :with_wrong_attributes),
                                question_id: question,
-                               user_id: @user,
+                               user_id: user,
                                format: :js }
             .to_not change(Answer, :count)
       end
@@ -65,7 +64,7 @@ describe AnswersController do
       it 'renders create template' do
         post :create, { answer: attributes_for(:answer, :with_wrong_attributes),
                         question_id: question,
-                        user_id: @user,
+                        user_id: user,
                         format: :js }
         expect(response).to render_template :create
       end
@@ -73,17 +72,17 @@ describe AnswersController do
   end
 
   describe 'DELETE #destroy' do
-    sign_in_user
+    before { sign_in(user) }
 
     let!(:another_user) { create :user }
-    let!(:authors_answer) { create :answer, question: question, user: @user }
+    let!(:authors_answer) { create :answer, question: question, user: user }
     let!(:another_users_answer) { create :answer, question: question, user: another_user }
 
     context "author's answer" do
 
       it 'deletes authors answer from the database' do
         expect { delete :destroy, id: authors_answer, question_id: question }
-            .to change(@user.answers, :count).by(-1)
+            .to change(user.answers, :count).by(-1)
       end
 
       it 'renders index view' do
