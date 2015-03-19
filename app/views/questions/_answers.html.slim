@@ -1,5 +1,5 @@
 - @question.answers.each do |answer|
-  p= answer.bodygit 
+  p= answer.body
 
   - if (answer.user == current_user) and !current_user.nil?
     = link_to 'Delete answer', question_answer_path(@question, answer.id), method: :delete
