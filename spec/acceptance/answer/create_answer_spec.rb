@@ -19,12 +19,9 @@ feature 'User tries to create an answer to the question', %q{
     end
   end
 
-  scenario 'Unauthenticated user tries to create an answer', js: true do
-    visit question_answers_path(question)
+  scenario 'Unauthenticated user tries to create an answer' do
+    visit question_path(question)
     expect(page).not_to have_link 'Answer the question'
-    visit new_question_answer_path(question)
-    expect(page).to have_content 'You need to sign in or sign up before continuing.'
-    expect(current_path).to eq new_user_session_path
+    expect(page).not_to have_field 'Your answer'
   end
-
 end

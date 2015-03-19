@@ -14,20 +14,20 @@ feature 'Delete answer', %q{
 
   scenario 'Author tries to delete his own answer' do
     sign_in(author)
-    visit question_answers_path(question)
+    visit question_path(question)
     click_on 'Delete answer'
     expect(page).to have_content 'Answer has been successfully deleted!'
-    expect(current_path).to eq question_answers_path(question)
+    expect(current_path).to eq question_path(question)
   end
 
   scenario 'Author tries to delete another users answer' do
     sign_in(author)
-    visit question_answers_path(question2)
+    visit question_path(question2)
     expect(page).not_to have_link 'Delete answer'
   end
 
   scenario 'Guest tries to delete an answer' do
-    visit question_answers_path(question2)
+    visit question_path(question2)
     expect(page).not_to have_link 'Delete answer'
   end
 end

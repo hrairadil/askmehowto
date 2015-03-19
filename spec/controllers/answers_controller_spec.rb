@@ -4,30 +4,6 @@ describe AnswersController do
   let(:question) { create :question }
   let(:answer) { create :answer, question: question }
   let(:user) { create :user }
-  describe 'GET #index' do
-    before { get :index, question_id: question }
-
-    it 'assigns question.answers to @answers' do
-      expect(assigns(:question).answers).to eq question.answers
-    end
-
-    it 'renders index view' do
-      expect(response).to render_template :index
-    end
-  end
-
-  describe 'GET #new' do
-    before { sign_in(user) }
-    before { get :new, question_id: question}
-
-    it 'assigns Answer.new to @answer' do
-      expect(assigns(:answer)).to be_a_new(Answer)
-    end
-
-    it 'renders new view' do
-      expect(response).to render_template :new
-    end
-  end
 
   describe 'POST #create' do
     before { sign_in(user) }
@@ -87,7 +63,7 @@ describe AnswersController do
 
       it 'renders index view' do
         delete :destroy, id: authors_answer, question_id: question
-        expect(response).to redirect_to question_answers_path(question)
+        expect(response).to redirect_to question
       end
     end
 
