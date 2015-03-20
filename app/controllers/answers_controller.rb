@@ -1,10 +1,10 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, except: [:index,:show]
-  before_action :set_question, only: [:index, :new, :show, :create, :destroy]
+  before_action :authenticate_user!
+  before_action :set_question, only: [ :create, :destroy]
   before_action :set_answer, only: [:destroy]
 
   def create
-    @answer = @question.answers.new(answer_params)
+    @answer = @question.answers.build(answer_params)
     @answer.user = current_user
     @answer.save
   end

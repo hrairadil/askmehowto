@@ -19,7 +19,15 @@ feature 'User tries to create an answer to the question', %q{
     end
   end
 
-  scenario 'Unauthenticated user tries to create an answer' do
+  scenario 'User tries to create an invalid answer', js: true do
+    sign_in(user)
+    visit question_path(question)
+    click_on 'Create answer'
+
+    expect(page).to have_content "Body can't be blank"
+  end
+
+  scenario 'Unauthenticated user can not create an answer' do
     visit question_path(question)
     expect(page).not_to have_link 'Answer the question'
     expect(page).not_to have_field 'Your answer'
