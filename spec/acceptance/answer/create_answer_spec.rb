@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative '../acceptance_helper'
 
 feature 'User tries to create an answer to the question', %q{
   In order to be able to solve an issue

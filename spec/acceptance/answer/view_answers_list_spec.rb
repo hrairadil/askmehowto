@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative '../acceptance_helper'
 
 feature 'User browses a question and a list of answers', %q{
   In order to be able to solve the issue

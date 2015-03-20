@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative '../acceptance_helper'
 
 feature 'Delete question', %q{
   In order to be able to get rid of unnecessary question
