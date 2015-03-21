@@ -3,6 +3,8 @@ p= @question.body
 
 -if @question.user == current_user
   p= link_to 'Delete question', question_path, method: :delete
+
 .answers
   = render 'answers'
+
 = render 'questions/answers_form'
