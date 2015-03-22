@@ -12,7 +12,7 @@ feature 'Delete question', %q{
   scenario 'Author tries to delete his own question' do
     sign_in(author)
     visit question_path(author.questions.first)
-    click_on 'Delete question'
+    click_on 'Delete'
     expect(page).to have_content 'Question has been successfully deleted'
     expect(current_path).to eq questions_path
   end
@@ -20,11 +20,11 @@ feature 'Delete question', %q{
   scenario 'Author tries to delete another users question' do
     sign_in(author)
     visit question_path(another_user.questions.first)
-    expect(page).not_to have_link 'Delete question'
+    expect(page).not_to have_link 'Delete'
   end
 
   scenario 'Guest tries to delete a question' do
     visit question_path(author.questions.first)
-    expect(page).not_to have_link 'Delete question'
+    expect(page).not_to have_link 'Delete'
   end
 end

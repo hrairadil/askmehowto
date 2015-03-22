@@ -30,8 +30,8 @@ feature 'Answer edit', %q{
     end
 
     scenario 'tries to edit his own answer', js: true do
-      click_on 'Edit'
       within '.answers' do
+        click_on 'Edit'
         fill_in 'Answer', with: 'edited answer'
         click_on 'Save'
 
