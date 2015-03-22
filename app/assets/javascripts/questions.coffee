@@ -5,7 +5,6 @@
 $ ->
   questionReady = ->
     $('.edit-question-link').click (e) ->
-      debugger
       e.preventDefault()
       $(this).hide()
       question_id = $(this).data('questionId')
