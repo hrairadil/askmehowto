@@ -41,7 +41,7 @@ feature 'Answer edit', %q{
       end
     end
 
-    scenario "tries to edit other user's question" do
+    scenario "tries to edit other user's question", js: true do
       within '.answers' do
         within "#answer-#{another_user_answer.id}" do
           expect(page).not_to have_link('Edit')
