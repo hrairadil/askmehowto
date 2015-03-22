@@ -3,7 +3,7 @@
         $('.question-errors').html("<%= j message %>");
     <% end %>
 <% else %>
-    $('.question').html("<%= j render :show %>");
-    $(document).ready(ready)
-    $(document).on('page:load', ready)
+    $('.question').html("<%= j render 'questions/show_question_partial' %>");
+    $(document).ready(questionReady)
+    $(document).on('page:load', questionReady)
 <% end %>

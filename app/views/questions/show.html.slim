@@ -1,22 +1,5 @@
 .question
-  h1= @question.title
-  p= @question.body
-
-  -if @question.user == current_user
-    p
-      = link_to 'Delete', question_path, method: :delete
-      = link_to 'Edit'
-      p
-        = form_for @question, remote: true do |f|
-          .question-errors
-            = f.label :title
-            = f.text_field :title
-
-            = f.label :body, 'Question'
-            = f.text_area :body
-
-            = f.submit 'Save'
+  = render 'questions/show_question_partial'
 .answers
   = render 'answers'
-
 = render 'questions/answers_form'
