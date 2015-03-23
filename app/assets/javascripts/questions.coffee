@@ -7,6 +7,7 @@ $ ->
     $('.edit-question-link').click (e) ->
       e.preventDefault()
       $(this).hide()
-      $('form#edit-question').show()
+      question_id = $(this).data('questionId')
+      $("form#edit-question-#{question_id}").show()
   $(document).ready(questionReady)
   $(document).on('page:load', questionReady)

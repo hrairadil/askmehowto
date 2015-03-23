@@ -10,8 +10,8 @@ feature 'Edit question', %q{
   given!(:question) { create :question, user: author }
 
   scenario 'Unauthenticated user tries to edit a question' do
-    visit question_path(question)
-    within '.question' do
+    visit questions_path
+    within '.questions' do
       expect(page).not_to have_link 'Edit'
     end
   end
@@ -19,17 +19,17 @@ feature 'Edit question', %q{
   describe 'Author' do
     before do
       sign_in(author)
-      visit question_path(question)
+      visit questions_path
     end
 
     scenario 'sees Edit link' do
-      within '.question' do
+      within "#question-#{question.id}" do
         expect(page).to have_link 'Edit'
       end
     end
 
     scenario 'tries to edit his own answer', js: true do
-      within '.question' do
+      within "#question-#{question.id}" do
         click_on 'Edit'
         fill_in 'Title', with: 'edited title'
         fill_in 'Question', with: 'edited question'

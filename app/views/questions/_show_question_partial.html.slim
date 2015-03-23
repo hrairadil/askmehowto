@@ -1,6 +1,3 @@
-h1= @question.title
-p= @question.body
-
 -if @question.user == current_user
   p
     = link_to 'Delete', question_path, method: :delete, remote: true
@@ -8,10 +5,10 @@ p= @question.body
     p
       = form_for @question, remote: true, html: { id: 'edit-question' } do |f|
         .question-errors
-          = f.label :title
-          = f.text_field :title
+        = f.label :title
+        = f.text_field :title
 
-          = f.label :body, 'Question'
-          = f.text_area :body
+        = f.label :body, 'Question'
+        = f.text_area :body
 
-          = f.submit 'Save'
+        = f.submit 'Save'

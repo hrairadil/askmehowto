@@ -1,5 +1,6 @@
 .question
-  = render 'questions/show_question_partial'
+  h1= @question.title
+  p= @question.body
 .answers
   = render 'answers'
 = render 'questions/answers_form'
