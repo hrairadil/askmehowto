@@ -11,7 +11,7 @@ feature 'User tries to create an answer to the question', %q{
   scenario 'Authenticated user tries to write an answer to the question', js: true do
     sign_in(user)
     visit question_path(question)
-    fill_in 'Your answer', with: 'This is the best answer ever!'
+    fill_in 'create-answer-body', with: 'This is the best answer ever!'
     click_on 'Create answer'
     expect(current_path).to eq question_path(question)
     within '.answers' do

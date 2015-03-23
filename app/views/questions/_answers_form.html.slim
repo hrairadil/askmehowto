@@ -3,5 +3,5 @@
     p
       = f.label :body, 'Your answer'
       .answer-errors
-      = f.text_area :body
+      = f.text_area :body, id: 'create-answer-body'
     p= f.submit 'Create answer'

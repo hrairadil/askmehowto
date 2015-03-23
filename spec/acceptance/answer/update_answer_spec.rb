@@ -30,7 +30,7 @@ feature 'Answer edit', %q{
     end
 
     scenario 'tries to edit his own answer', js: true do
-      within '.answers' do
+      within "#answer-#{answer.id}" do
         click_on 'Edit'
         fill_in 'Answer', with: 'edited answer'
         click_on 'Save'
@@ -41,11 +41,9 @@ feature 'Answer edit', %q{
       end
     end
 
-    scenario "tries to edit other user's question", js: true do
-      within '.answers' do
-        within "#answer-#{another_user_answer.id}" do
-          expect(page).not_to have_link('Edit')
-        end
+    scenario "tries to edit other user's question" do
+      within "#answer-#{another_user_answer.id}" do
+        expect(page).not_to have_link('Edit')
       end
     end
   end
