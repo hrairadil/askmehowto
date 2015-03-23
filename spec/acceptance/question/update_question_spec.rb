@@ -8,6 +8,7 @@ feature 'Edit question', %q{
   given(:author) { create :user }
   given(:user) { create :user }
   given!(:question) { create :question, user: author }
+  given!(:another_users_question) { create :question, user: user }
 
   scenario 'Unauthenticated user tries to edit a question' do
     visit questions_path
@@ -38,6 +39,12 @@ feature 'Edit question', %q{
         expect(page).not_to have_content question.body
         expect(page).to have_content 'edited question'
         expect(page).not_to have_selector 'textarea'
+      end
+    end
+
+    scenario "tries to edit another user's question" do
+      within "#question-#{another_users_question.id}" do
+        expect(page).not_to have_link 'Edit'
       end
     end
   end
