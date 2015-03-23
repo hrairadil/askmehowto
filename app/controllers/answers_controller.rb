@@ -16,9 +16,6 @@ class AnswersController < ApplicationController
   def destroy
     if @answer.user == current_user
       @answer.destroy!
-      redirect_to @question, notice: 'Answer has been successfully deleted!'
-    else
-      redirect_to @question, notice: 'This action is restricted!'
     end
   end
 

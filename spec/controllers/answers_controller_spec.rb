@@ -92,25 +92,25 @@ describe AnswersController do
     context "author's answer" do
 
       it 'deletes authors answer from the database' do
-        expect { delete :destroy, id: authors_answer, question_id: question }
+        expect { delete :destroy, id: authors_answer, question_id: question, format: :js }
             .to change(user.answers, :count).by(-1)
       end
 
       it 'renders index view' do
-        delete :destroy, id: authors_answer, question_id: question
-        expect(response).to redirect_to question
+        delete :destroy, id: authors_answer, question_id: question, format: :js
+        expect(response).to render_template :destroy
       end
     end
 
     context "another user's answer" do
       it "does not delete another user's answer" do
-        expect { delete :destroy, id: another_users_answer, question_id: question }
+        expect { delete :destroy, id: another_users_answer, question_id: question, format: :js }
             .to_not change(another_user.questions, :count)
       end
 
       it 'renders show view' do
-        delete :destroy, id: another_users_answer, question_id: question
-        expect(response).to redirect_to question
+        delete :destroy, id: another_users_answer, question_id: question, format: :js
+        expect(response).to render_template :destroy
       end
     end
   end
