@@ -5,26 +5,32 @@ feature 'Delete question', %q{
   As an author
   I want to be able to delete question
 } do
-  given(:author) { create :user, :with_questions }
-  given(:another_user) { create :user, :with_questions }
+  given(:author) { create :user }
+  given(:another_user) { create :user }
+  given!(:authors_question) { create :question, user: author }
+  given!(:another_users_question) { create :question, user: another_user }
 
 
-  scenario 'Author tries to delete his own question' do
+  scenario 'Author tries to delete his own question', js: true do
     sign_in(author)
-    visit question_path(author.questions.first)
-    click_on 'Delete'
-    expect(page).to have_content 'Question has been successfully deleted'
+    visit questions_path
+    within "#question-#{authors_question.id}" do
+      click_on 'Delete'
+    end
+    expect(page).not_to have_content authors_question.title
     expect(current_path).to eq questions_path
   end
 
   scenario 'Author tries to delete another users question' do
     sign_in(author)
-    visit question_path(another_user.questions.first)
-    expect(page).not_to have_link 'Delete'
+    visit questions_path
+    within "#question-#{another_users_question.id}" do
+      expect(page).not_to have_link 'Delete'
+    end
   end
 
   scenario 'Guest tries to delete a question' do
-    visit question_path(author.questions.first)
+    visit question_path(authors_question)
     expect(page).not_to have_link 'Delete'
   end
 end

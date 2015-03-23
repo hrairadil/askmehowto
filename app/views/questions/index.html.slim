@@ -1,6 +1,4 @@
-h1 All questions
-- @questions.each do |question|
-    p.bold= link_to question.title, question_path(question)
-    p= question.body
--if user_signed_in?
-  p= link_to 'Ask question', new_question_path
+h1 Questions
+
+.questions
+  = render 'questions/questions_index'

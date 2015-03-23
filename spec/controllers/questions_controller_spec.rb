@@ -121,25 +121,30 @@ describe QuestionsController do
 
     context 'author' do
       it 'deletes authors question from the database' do
-        expect { delete :destroy, id: authors_question }
+        expect { delete :destroy, id: authors_question, format: :js }
             .to change(user.questions, :count).by(-1)
       end
 
+      it 'assigns questions to @questions' do
+        delete :destroy, id: authors_question, format: :js
+        expect(assigns(:questions)).to eq Question.all
+      end
+
       it 'renders index view' do
-        delete :destroy, id: question
-        expect(response).to redirect_to questions_path
+        delete :destroy, id: question, format: :js
+        expect(response).to render_template :destroy
       end
     end
 
     context 'another user' do
       it "does not delete another user's question" do
-        expect { delete :destroy, id: another_user.questions.first }
-                                  .to_not change(another_user.questions, :count)
+        expect { delete :destroy, id: another_user.questions.first, format: :js }
+            .to_not change(another_user.questions, :count)
       end
 
       it 'renders show view' do
-        delete :destroy, id: another_user.questions.first
-        expect(response).to redirect_to another_user.questions.first
+        delete :destroy, id: another_user.questions.first, format: :js
+        expect(response).to render_template :destroy
       end
     end
   end
