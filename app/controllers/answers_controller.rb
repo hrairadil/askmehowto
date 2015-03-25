@@ -1,7 +1,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_question, only: [ :create, :update, :destroy]
-  before_action :set_answer, only: [:update, :destroy]
+  before_action :set_question, only: [ :create, :update, :destroy, :set_the_best]
+  before_action :set_answer, only: [:update, :destroy, :set_the_best]
 
   def create
     @answer = @question.answers.new(answer_params)
@@ -14,9 +14,11 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    if @answer.user == current_user
-      @answer.destroy!
-    end
+    @answer.destroy! if @answer.user == current_user
+  end
+
+  def set_the_best
+    @answer.set_the_best
   end
 
   private

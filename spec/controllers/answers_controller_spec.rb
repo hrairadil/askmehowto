@@ -114,4 +114,26 @@ describe AnswersController do
       end
     end
   end
+
+  describe 'PATCH #set_the_best' do
+    before { sign_in(user) }
+
+    before do
+      patch :set_the_best, id: another_users_answer,
+            question_id: question,
+            format: :js
+    end
+
+    context "answer to the author's question" do
+
+      it 'sets the best answer' do
+        another_users_answer.reload
+        expect(another_users_answer).to be_best
+      end
+
+      it 'renders set_the_best template' do
+        expect(response).to render_template :set_the_best
+      end
+    end
+  end
 end
