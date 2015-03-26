@@ -8,7 +8,7 @@ class Answer < ActiveRecord::Base
 
   def set_the_best
     Answer.transaction do
-      self.question.answers.update_all(best: false)
+      Answer.where(question_id: question_id, best: true).update_all(best: false)
       self.update(best: true)
     end
   end

@@ -4,6 +4,7 @@ describe AnswersController do
   let!(:user) { create :user }
   let!(:another_user) { create :user }
   let!(:question) { create :question, user: user }
+  let!(:another_question) { create :question, :with_answers, user: another_user }
   let!(:answer) { create :answer, question: question, user: user }
   let!(:authors_answer) { create :answer, question: question, user: user }
   let!(:another_users_answer) { create :answer, question: question, user: another_user }
@@ -118,17 +119,33 @@ describe AnswersController do
   describe 'PATCH #set_the_best' do
     before { sign_in(user) }
 
-    before do
-      patch :set_the_best, id: another_users_answer,
-            question_id: question,
-            format: :js
-    end
-
-    context "answer to the author's question" do
+    context "if author's question" do
+      before do
+        patch :set_the_best, id: another_users_answer,
+              question_id: question,
+              format: :js
+      end
 
       it 'sets the best answer' do
         another_users_answer.reload
         expect(another_users_answer).to be_best
+      end
+
+      it 'renders set_the_best template' do
+        expect(response).to render_template :set_the_best
+      end
+    end
+
+    context "if another user's question" do
+      before do
+        patch :set_the_best, id: another_question.answers.first,
+              question_id: another_question,
+              format: :js
+      end
+
+      it 'does not set the best answer' do
+        another_question.answers.first.reload
+        expect(another_question.answers.first).not_to be_best
       end
 
       it 'renders set_the_best template' do

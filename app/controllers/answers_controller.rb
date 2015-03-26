@@ -18,7 +18,7 @@ class AnswersController < ApplicationController
   end
 
   def set_the_best
-    @answer.set_the_best
+    @answer.set_the_best if @question.user == current_user
   end
 
   private
