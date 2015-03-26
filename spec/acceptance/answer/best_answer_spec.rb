@@ -6,7 +6,7 @@ feature 'Choose the best answer', %q{
   I want to be able to choose the best answer
 } do
   given(:author) { create :user }
-  given(:another_user) { create :user, :with_answers }
+  given(:another_users_question) { create :question, :with_answers, user: create(:user) }
   given!(:question) { create :question, :with_all_the_best_answers, user: author }
   given!(:best_answer) { create :answer, question: question, user: author }
 
@@ -33,7 +33,8 @@ feature 'Choose the best answer', %q{
     end
 
     scenario "can not choose another user's " do
-      within "#answer-#{best_answer.id}" do
+      visit question_path(another_users_question)
+      within "#answer-#{another_users_question.answers.first.id}" do
         expect(page).not_to have_link 'Best'
       end
     end
