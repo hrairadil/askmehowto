@@ -4,6 +4,6 @@
     <% end %>
 <% else %>
     $('.questions').html("<%= j render 'questions/questions' %>");
-    $(document).ready(questionReady)
-    $(document).on('page:load', questionReady)
+    $(document).ready(questionReady);
+    $(document).on('page:load', questionReady);
 <% end %>

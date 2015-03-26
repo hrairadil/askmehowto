@@ -12,13 +12,28 @@ describe Answer do
   it { should validate_presence_of :question_id}
 
   describe 'the best' do
-    let(:question) { create :question}
+    let(:question) { create :question, :with_all_the_best_answers }
+    let(:another_question) { create :question, :with_all_the_best_answers }
     let(:best_answer) { create :answer, question: question }
+    let(:another_best_answer) { create :answer, question: another_question }
 
-    it 'should be set to true' do
+    before do
       best_answer.set_the_best
       best_answer.reload
+      another_best_answer.set_the_best
+      another_best_answer.reload
+    end
+
+    it 'sets to true' do
       expect(best_answer.best).to eq true
+    end
+
+    it 'is unique for one question' do
+      expect(question.answers.where(best: true).count).to eq 1
+    end
+
+    it 'is not unique for several questions' do
+      expect(Answer.where(best: true).count).to eq 2
     end
   end
 end

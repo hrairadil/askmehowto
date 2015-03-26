@@ -6,7 +6,7 @@ feature 'Choose the best answer', %q{
   I want to be able to choose the best answer
 } do
   given(:author) { create :user }
-  given!(:question) { create :question, :with_answers, user: author }
+  given!(:question) { create :question, :with_all_the_best_answers, user: author }
   given!(:best_answer) { create :answer, question: question, user: author }
 
   scenario 'Unauthenticated user tries to choose the best answer' do
