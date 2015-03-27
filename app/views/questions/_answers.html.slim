@@ -1,5 +1,17 @@
 - @question.answers.each do |answer|
-  p= answer.body
+  div id="answer-#{answer.id}"
+    - if answer.best
+      div id='best-answer'
+    p= answer.body
+    - if @question.user == current_user and answer.persisted? and current_user.present?
+      = link_to 'Best', set_the_best_question_answer_path(@question, answer.id), method: :patch, remote: true
 
-  - if (answer.user == current_user) and !current_user.nil?
-    = link_to 'Delete answer', question_answer_path(@question, answer.id), method: :delete
+    - if (answer.user == current_user) and current_user.present? and answer.persisted?
+      p
+        = link_to 'Delete answer', question_answer_path(@question, answer.id), method: :delete, remote: true
+        = link_to 'Edit', '', class: 'edit-answer-link', data: { answer_id: answer.id }
+        p
+          = form_for [@question, answer], remote: true, html: { id: "edit-answer-#{answer.id}" } do |f|
+            = f.label :body, 'Answer'
+            = f.text_area :body
+            = f.submit 'Save'

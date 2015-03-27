@@ -4,5 +4,6 @@
     <% end %>
 <% else %>
     $('.answers').html("<%= j render 'questions/answers' %>");
-    $('#create-answer-body').val('');
+    $(document).ready(ready);
+    $(document).on('page:load', ready);
 <% end %>

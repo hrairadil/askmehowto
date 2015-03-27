@@ -18,5 +18,16 @@ FactoryGirl.define do
       title nil
       body nil
     end
+
+    trait :with_all_the_best_answers do
+      transient do
+        number_of_answers 4
+      end
+
+      after(:create) do |question, evaluator|
+        create_list(:answer, evaluator.number_of_answers, question: question, best: true)
+      end
+    end
+
   end
 end

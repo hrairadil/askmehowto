@@ -1,7 +1,7 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, except: [:index,:show]
-  before_action :set_question, only: [:index, :new, :show, :create, :destroy]
-  before_action :set_answer, only: [:destroy]
+  before_action :authenticate_user!
+  before_action :set_question, only: [ :create, :update, :destroy, :set_the_best]
+  before_action :set_answer, only: [:update, :destroy, :set_the_best]
 
   def create
     @answer = @question.answers.new(answer_params)
@@ -9,13 +9,16 @@ class AnswersController < ApplicationController
     @answer.save
   end
 
+  def update
+    @answer.update(answer_params) if @answer.user == current_user
+  end
+
   def destroy
-    if @answer.user == current_user
-      @answer.destroy!
-      redirect_to @question, notice: 'Answer has been successfully deleted!'
-    else
-      redirect_to @question, notice: 'This action is restricted!'
-    end
+    @answer.destroy! if @answer.user == current_user
+  end
+
+  def set_the_best
+    @answer.set_the_best if @question.user == current_user
   end
 
   private

@@ -1,9 +1,9 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :set_question, only: [:show, :destroy]
+  before_action :set_question, only: [:show, :update, :destroy]
+  before_action :set_questions, only: [:index, :update, :destroy]
 
   def index
-    @questions = Question.all
   end
 
   def new
@@ -25,19 +25,27 @@ class QuestionsController < ApplicationController
     end
   end
 
+  def update
+    @question.update(question_params) if @question.user == current_user
+  end
+
   def destroy
     if @question.user == current_user
-      @question.destroy!
-      redirect_to questions_path, notice: 'Question has been successfully deleted!'
+      flash.now[:notice] = 'Question has been successfully deleted!' if @question.destroy!
     else
-      redirect_to @question, alert: 'Can not delete question'
+      flash.now[:alert] = 'This action is restricted'
     end
   end
 
   private
+    def set_questions
+      @questions = Question.all
+    end
+
     def set_question
       @question = Question.find(params[:id])
     end
+
     def question_params
       params.require(:question).permit(:title, :body)
     end

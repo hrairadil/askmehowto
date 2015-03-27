@@ -1,0 +1,7 @@
+- if user_signed_in?
+  = form_for [@question, @answer], remote: true, html: { id: 'create-answer-form' } do |f|
+    p
+      = f.label :body, 'Your answer'
+      .answer-errors
+      = f.text_area :body, id: 'create-answer-body'
+    p= f.submit 'Create answer'
