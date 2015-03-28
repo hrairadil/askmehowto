@@ -17,7 +17,7 @@ feature 'Add files to question', %q{
     click_on 'Ask question'
     fill_in 'Title', with: 'Test Title'
     fill_in 'Body', with: 'Test Body'
-    attach_file 'File', "#{Rails.root}/spec/fixtures/screenshot.jpg"
+    attach_file 'File', "#{Rails.root}/spec/acceptance/fixtures/screenshot.jpg"
     click_on 'Create'
 
     expect(page).to have_content 'screenshot.jpg'

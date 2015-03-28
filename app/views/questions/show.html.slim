@@ -1,6 +1,9 @@
 .question
   h1= @question.title
   p= @question.body
+  ul
+    - @question.attachments.each do |a|
+      li= a.file.file.filename
 .answers
   = render 'answers'
 = render 'questions/answer_create_form'
