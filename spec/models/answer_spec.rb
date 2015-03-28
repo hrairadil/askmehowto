@@ -10,7 +10,11 @@ describe Answer do
   it { should respond_to :body }
   it { should respond_to :best }
   it { should respond_to :question_id }
+
   it { should belong_to :question }
+  it { should have_many(:attachments).dependent(:destroy) }
+  it { should accept_nested_attributes_for :attachments }
+
   it { should validate_presence_of :body}
   it { should validate_presence_of :question_id}
 
