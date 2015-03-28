@@ -14,9 +14,9 @@ feature 'Add files to answer', %q{
     visit question_path(question)
   end
 
-  scenario 'User adds file when answers the question' do
+  scenario 'User adds file when answers the question', js: true do
     fill_in 'create-answer-body', with: 'This is the best answer ever!'
-    attach_file 'File', "#{Rails.root}/spec/acceptance/fixtures/screenshot.jpg"
+    attach_file 'File', "#{Rails.root}/spec/fixtures/screenshot.jpg"
     click_on 'Create answer'
     within '.answers' do
       expect(page).to have_link 'screenshot.jpg', href: '/uploads/attachment/file/1/screenshot.jpg'
