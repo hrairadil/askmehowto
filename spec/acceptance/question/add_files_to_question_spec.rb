@@ -20,6 +20,6 @@ feature 'Add files to question', %q{
     attach_file 'File', "#{Rails.root}/spec/acceptance/fixtures/screenshot.jpg"
     click_on 'Create'
 
-    expect(page).to have_content 'screenshot.jpg'
+    expect(page).to have_link 'screenshot.jpg', href: '/uploads/attachment/file/1/screenshot.jpg'
   end
 end
