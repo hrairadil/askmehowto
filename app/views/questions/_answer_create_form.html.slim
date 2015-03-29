@@ -1,11 +1,13 @@
 - if user_signed_in?
-  = form_for [@question, @answer], remote: true, html: { id: 'create-answer-form' } do |f|
+  = nested_form_for [@question, @answer], remote: true, html: { id: 'create-answer-form' } do |f|
     p
-      = f.label :body, 'Your answer'
       .answer-errors
+      = f.label :body, 'Your answer'
       = f.text_area :body, id: 'create-answer-body'
     p
       = f.fields_for :attachments do |a|
         = a.label :file
         = a.file_field :file
+        = a.link_to_remove 'Remove this file'
+      = f.link_to_add 'Add more', :attachments
     p= f.submit 'Create answer'

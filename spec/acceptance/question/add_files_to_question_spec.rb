@@ -24,10 +24,10 @@ feature 'Add files to question', %q{
   end
 
   scenario 'User sees link "Add more"' do
-    expect(page).to have_link "Add more"
+    expect(page).to have_link 'Add more'
   end
 
-  scenario 'User adds several files when asks question', js: true do
+  scenario 'User adds several files when creates question', js: true do
     fill_in 'Title', with: 'Test Title'
     fill_in 'Body', with: 'Test Body'
 
@@ -37,5 +37,11 @@ feature 'Add files to question', %q{
     click_on 'Create'
 
     2.times { |i| expect(page).to have_link "screenshot#{i}.jpg" }
+  end
+
+
+  scenario 'User sees "Remove this file" when fills in new questions form', js: true do
+    click_on 'Add more'
+    expect(page).to have_link 'Remove this file'
   end
 end
