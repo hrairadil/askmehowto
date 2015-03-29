@@ -1,4 +1,4 @@
-= form_for @question do |f|
+= nested_form_for @question do |f|
   p
     = f.label :title
     = f.text_field :title
@@ -10,5 +10,7 @@
     = f.fields_for :attachments do |a|
       = a.label :file
       = a.file_field :file
+
+    = f.link_to_add "Add more", :attachments
 
   p= f.submit 'Create', class: 'btn btn-large btn-primary'
