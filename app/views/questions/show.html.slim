@@ -4,6 +4,7 @@
   ul
     - @question.attachments.each do |a|
       li= link_to a.file.identifier, a.file.url
+      p= link_to 'Delete file'
 .answers
   = render 'answers'
 = render 'questions/answer_create_form'

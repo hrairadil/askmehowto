@@ -29,13 +29,13 @@ FactoryGirl.define do
       end
     end
 
-    trait :with_files do
+    trait :with_attachments do
       transient do
-        number_of_files 1
+        number_of_attachments 1
       end
 
       after(:create) do |question, evaluator|
-        create_list(:attachment, evaluator.number_of_files, attachable: question)
+        create_list(:attachment, evaluator.number_of_attachments, attachable: question)
       end
     end
   end
