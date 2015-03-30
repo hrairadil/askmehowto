@@ -5,7 +5,8 @@
     - @question.attachments.each do |a|
       div id="file-#{a.id}"
         li= link_to a.file.identifier, a.file.url
-        p= link_to 'Delete file', question_attachment_path(@question, a.id), method: :delete, remote: true
+        - if @question.user == current_user
+          p= link_to 'Delete file', question_attachment_path(@question, a.id), method: :delete, remote: true
 .answers
   = render 'answers'
 = render 'questions/answer_create_form'
