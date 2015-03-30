@@ -40,7 +40,7 @@ feature 'Add files to question', %q{
   end
 
 
-  scenario 'User sees "Remove this file" when fills in new questions form', js: true do
+  scenario 'User sees "Remove this file" when fills in a new questions form', js: true do
     click_on 'Add more'
     expect(page).to have_link 'Remove this file'
   end

@@ -12,6 +12,6 @@ class AttachmentsController < ApplicationController
       @attachment = Attachment.find(params[:id])
     end
     def set_entity
-      @entity = @attachment.attachable_type.constantize.find(params[:attachable_id])
+      @entity = @attachment.attachable_type.constantize.find(@attachment.attachable_id)
     end
 end

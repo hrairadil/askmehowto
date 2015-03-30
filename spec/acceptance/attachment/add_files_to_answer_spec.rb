@@ -39,7 +39,7 @@ feature 'Add files to answer', %q{
     end
   end
 
-  scenario 'User sees "Remove this file" when fills in new answer form', js: true do
+  scenario 'User sees "Remove this file" when fills in a new answer form', js: true do
     click_on 'Add more'
     expect(page).to have_link 'Remove this file'
   end
