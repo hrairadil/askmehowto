@@ -19,6 +19,7 @@ feature 'Add files to answer', %q{
     attach_file 'File', "#{Rails.root}/spec/fixtures/screenshot0.jpg"
     click_on 'Create answer'
     within '.answers' do
+      save_and_open_page
       expect(page).to have_link 'screenshot0.jpg', href: '/uploads/attachment/file/1/screenshot0.jpg'
     end
   end
@@ -29,6 +30,7 @@ feature 'Add files to answer', %q{
 
   scenario 'User adds several files when creates answer', js: true do
     fill_in 'create-answer-body', with: 'Test Body'
+
     click_on 'Add more'
     inputs = all('input[type="file"]')
     2.times { |i| inputs[i].set("#{Rails.root}/spec/fixtures/screenshot#{i}.jpg") }
