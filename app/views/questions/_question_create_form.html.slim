@@ -7,11 +7,6 @@
     = f.text_area :body
   p Attachments:
   p
-    = f.fields_for :attachments do |a|
-      = a.label :file
-      = a.file_field :file
-      = a.link_to_remove 'Remove this file'
-
-    = f.link_to_add 'Add more', :attachments
+    = render 'layouts/shared/attachment_form', f: f
 
   p= f.submit 'Create', class: 'btn btn-large btn-primary'

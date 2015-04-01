@@ -19,7 +19,6 @@ feature 'Add files to answer', %q{
     attach_file 'File', "#{Rails.root}/spec/fixtures/screenshot0.jpg"
     click_on 'Create answer'
     within '.answers' do
-      save_and_open_page
       expect(page).to have_link 'screenshot0.jpg', href: '/uploads/attachment/file/1/screenshot0.jpg'
     end
   end

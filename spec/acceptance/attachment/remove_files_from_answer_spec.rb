@@ -19,11 +19,24 @@ feature 'Remove files from answer', %q{
     end
   end
 
+  scenario 'Author removes files when edits the answer', js: true do
+    sign_in(author)
+    visit question_path(question)
+    within "#answer-#{answer.id}" do
+      click_on 'Edit'
+      within all(".file-#{attachment.id}")[1] do
+        click_on 'Delete file'
+      end
+      expect(page).not_to have_content attachment.file.identifier
+    end
+    expect(current_path).to eq question_path(question)
+  end
+
   scenario 'Author removes files', js: true do
     sign_in(author)
     visit question_path(question)
     within '.answers' do
-      within "#file-#{attachment.id}" do
+      within ".file-#{attachment.id}" do
         click_on 'Delete file'
       end
       expect(page).not_to have_content attachment.file.identifier

@@ -4,12 +4,7 @@
       - if answer.best
         div id='best-answer'
       p= answer.body
-      ul
-        - answer.attachments.each do |a|
-          div class="file-#{a.id}"
-            li= link_to a.file.identifier, a.file.url
-            - if answer.user == current_user
-              p= link_to 'Delete file', attachment_path(a.id), method: :delete, remote: true
+      = render 'layouts/shared/attachments_list', entity: answer
 
       - if @question.user == current_user and current_user.present?
         = link_to 'Best', set_the_best_question_answer_path(@question, answer.id), method: :patch, remote: true
@@ -23,18 +18,6 @@
               p
                 = f.label :body, 'Answer'
                 = f.text_area :body
-                p
-                  = f.fields_for :attachments do |a|
-                    - attachment = a.object
-                    - if attachment.new_record?
-                      = a.label :file
-                      = a.file_field :file
-                      = a.link_to_remove 'Remove this file'
-                    - else
-                      p
-                        div class="file-#{attachment.id}"
-                          = attachment.file.identifier
-
-                  p= f.link_to_add 'Add more', :attachments
+                = render 'layouts/shared/attachments_list', entity: answer
               p
                 = f.submit 'Save'

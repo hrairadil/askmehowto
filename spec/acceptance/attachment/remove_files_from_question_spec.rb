@@ -22,10 +22,22 @@ feature 'Remove files from question', %q{
     expect(page).to have_link 'Delete file'
   end
 
+  scenario 'Author removes files when edits the question', js: true do
+    visit questions_path
+    within "#question-#{question.id}" do
+      click_on 'Edit'
+      within ".file-#{attachment.id}" do
+        click_on 'Delete file'
+      end
+      expect(page).not_to have_content attachment.file.identifier
+    end
+    expect(current_path).to eq questions_path
+  end
+
   scenario 'Author removes files', js: true do
     visit question_path(question)
     within '.question' do
-      within "#file-#{attachment.id}" do
+      within ".file-#{attachment.id}" do
         click_on 'Delete file'
       end
       expect(page).not_to have_content attachment.file.identifier
