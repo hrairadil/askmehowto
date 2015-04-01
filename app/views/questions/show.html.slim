@@ -1,6 +1,8 @@
 .question
   h1= @question.title
   p= @question.body
+  = render 'layouts/shared/attachments_list', entity: @question
 .answers
   = render 'answers'
-= render 'questions/answer_create_form'
+.create-answer
+  = render 'questions/answer_create_form'

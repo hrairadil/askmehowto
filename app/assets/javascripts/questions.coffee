@@ -3,11 +3,10 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 $ ->
-  questionReady = ->
-    $('.edit-question-link').click (e) ->
-      e.preventDefault()
-      $(this).hide()
-      question_id = $(this).data('questionId')
-      $("form#edit-question-#{question_id}").show()
-  $(document).ready(questionReady)
-  $(document).on('page:load', questionReady)
+  editQuestion = (e) ->
+    e.preventDefault()
+    $(this).hide()
+    question_id = $(this).data('questionId')
+    $("form#edit-question-#{question_id}").show()
+
+  $(document).on 'click', '.edit-question-link', editQuestion

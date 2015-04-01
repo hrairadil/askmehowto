@@ -1,7 +1,10 @@
 - if user_signed_in?
-  = form_for [@question, @answer], remote: true, html: { id: 'create-answer-form' } do |f|
+  = nested_form_for [@question, @answer], remote: true, html: { id: 'create-answer-form' } do |f|
     p
-      = f.label :body, 'Your answer'
       .answer-errors
+      = f.label :body, 'Your answer'
       = f.text_area :body, id: 'create-answer-body'
+    p Attachments:
+    p
+      = render 'layouts/shared/attachment_form', f: f
     p= f.submit 'Create answer'

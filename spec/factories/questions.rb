@@ -29,5 +29,14 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_attachments do
+      transient do
+        number_of_attachments 1
+      end
+
+      after(:create) do |question, evaluator|
+        create_list(:attachment, evaluator.number_of_attachments, attachable: question)
+      end
+    end
   end
 end

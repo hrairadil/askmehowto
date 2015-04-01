@@ -1,8 +1,12 @@
-= form_for @question do |f|
-  = f.label :title
-  = f.text_field :title
+= nested_form_for @question do |f|
+  p
+    = f.label :title
+    = f.text_field :title
+  p
+    = f.label :body
+    = f.text_area :body
+  p Attachments:
+  p
+    = render 'layouts/shared/attachment_form', f: f
 
-  = f.label :body
-  = f.text_area :body
-
-  = f.submit 'Create', class: 'btn btn-large btn-primary'
+  p= f.submit 'Create', class: 'btn btn-large btn-primary'
