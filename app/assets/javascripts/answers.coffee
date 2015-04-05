@@ -10,3 +10,11 @@ $ ->
     $("form#edit-answer-#{answer_id}").show()
 
   $(document).on 'click', '.edit-answer-link', editAnswer
+
+  $('form.new_answer').bind 'ajax:success', (e, data, status, xhr) ->
+    answer = $.parseJSON(xhr.responseText)
+    $('.answers').append("<p> #{answer.body} </p>")
+  .bind 'ajax:error', (e, xhr, status, error) ->
+    errors = $.parseJSON(xhr.responseText)
+    $.each errors, (index, value) ->
+      $('.answer-errors').append(value)

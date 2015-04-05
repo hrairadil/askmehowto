@@ -16,7 +16,7 @@ describe AnswersController do
       let(:create_params) {{ answer: attributes_for(:answer),
                              question_id: question,
                              user_id: user,
-                             format: :js }}
+                             format: :json }}
 
       it 'saves a new answer to the database' do
         expect { post :create, create_params }.to change(question.answers, :count).by(1)
@@ -32,7 +32,7 @@ describe AnswersController do
       let(:wrong_create_params){{ answer: attributes_for(:answer, :with_wrong_attributes),
                                   question_id: question,
                                   user_id: user,
-                                  format: :js }}
+                                  format: :json }}
 
       it 'does not save a new answer to the database' do
         expect { post :create, wrong_create_params }
@@ -41,7 +41,7 @@ describe AnswersController do
 
       it 'renders create template' do
         post :create, wrong_create_params
-        expect(response).to render_template :create
+        expect(response.status).to eq 422
       end
     end
   end
