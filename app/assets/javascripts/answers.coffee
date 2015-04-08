@@ -13,8 +13,10 @@ $ ->
 
   $('form.new_answer').bind 'ajax:success', (e, data, status, xhr) ->
     answer = $.parseJSON(xhr.responseText)
-    $('.answers').append("<p> #{answer.body} </p>")
+    $('.answers').append(JST["templates/answer"]({answer: answer}))
+    $('#create-answer-body').val('')
   .bind 'ajax:error', (e, xhr, status, error) ->
+    $('.answer-errors').html('')
     errors = $.parseJSON(xhr.responseText)
     $.each errors, (index, value) ->
       $('.answer-errors').append(value)

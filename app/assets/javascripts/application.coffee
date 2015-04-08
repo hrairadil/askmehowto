@@ -11,8 +11,11 @@
 # about supported directives.
 #
 #= require jquery
+#= require jquery.turbolinks
 #= require jquery_ujs
 #= require jquery.remotipart
 #= require jquery_nested_form
+#= require skim
 #= require turbolinks
+#= require_tree ./templates
 #= require_tree .
