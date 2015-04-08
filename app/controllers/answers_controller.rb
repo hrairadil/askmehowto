@@ -8,18 +8,22 @@ class AnswersController < ApplicationController
     @answer = @question.answers.new(answer_params)
     @answer.user = current_user
     if @answer.save
-      render :create
+      render :submit
     else
-      render json: @answer.errors.full_messages, status: :unprocessable_entity
+      render_errors
     end
   end
 
   def update
-    @answer.update(answer_params) if @answer.user == current_user
+    if @answer.update(answer_params)
+      render :submit
+    else
+      render_errors
+    end
   end
 
   def destroy
-    @answer.destroy! if @answer.user == current_user
+    @answer.destroy!
   end
 
   def set_the_best
@@ -41,5 +45,9 @@ class AnswersController < ApplicationController
 
     def authorize_user
       redirect_to root_path unless @answer.user == current_user
+    end
+
+    def render_errors
+      render json: @answer.errors.full_messages, status: :unprocessable_entity
     end
 end

@@ -20,3 +20,12 @@ $ ->
     errors = $.parseJSON(xhr.responseText)
     $.each errors, (index, value) ->
       $('.answer-errors').append(value)
+
+  $('form.edit_answer').bind 'ajax:success', (e, data, status, xhr) ->
+    answer = $.parseJSON(xhr.responseText)
+    $('#answer-' + answer.id).replaceWith(JST["templates/answer"]({answer: answer}))
+  .bind 'ajax:error', (e, xhr, status, error) ->
+    $('.edit-answer-errors').html('')
+    errors = $.parseJSON(xhr.responseText)
+    $.each errors, (index, value) ->
+      $('.edit-answer-errors').append(value)

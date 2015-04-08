@@ -3,6 +3,6 @@
   p= @question.body
   = render 'layouts/shared/attachments_list', entity: @question
 .answers
-  = render 'answers'
+  = render 'answers/index'
 .create-answer
-  = render 'questions/answer_create_form'
+  = render 'answers/form'

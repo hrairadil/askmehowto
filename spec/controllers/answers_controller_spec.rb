@@ -24,7 +24,7 @@ describe AnswersController do
 
       it 'renders create template' do
         post :create, create_params
-        expect(response).to render_template :create
+        expect(response).to render_template :submit
       end
     end
 
@@ -52,7 +52,7 @@ describe AnswersController do
                            answer: attributes_for(:answer),
                            question_id: question,
                            user_id: user,
-                           format: :js }}
+                           format: :json }}
 
     it 'assigns the requested answer to @answer' do
       patch :update, update_params
@@ -75,7 +75,7 @@ describe AnswersController do
                      answer: { body: 'should not update this body'} ,
                      question_id: question,
                      user_id: another_user,
-                     format: :js
+                     format: :json
 
       another_users_answer.reload
       expect(another_users_answer.body).not_to eq 'should not update this body'
@@ -83,7 +83,7 @@ describe AnswersController do
 
     it 'render update template' do
       patch :update, update_params
-      expect(response).to render_template :update
+      expect(response).to render_template :submit
     end
   end
 
