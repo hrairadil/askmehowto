@@ -111,7 +111,7 @@ describe AnswersController do
 
       it 'renders show view' do
         delete :destroy, id: another_users_answer, question_id: question, format: :js
-        expect(response).to render_template :destroy
+        expect(response).to redirect_to root_path
       end
     end
   end

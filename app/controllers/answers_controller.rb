@@ -2,6 +2,7 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_question, only: [ :create, :update, :destroy, :set_the_best]
   before_action :set_answer, only: [:update, :destroy, :set_the_best]
+  before_action :authorize_user, only: [:update, :destroy]
 
   def create
     @answer = @question.answers.new(answer_params)
@@ -36,5 +37,9 @@ class AnswersController < ApplicationController
 
     def set_question
       @question = Question.find(params[:question_id])
+    end
+
+    def authorize_user
+      redirect_to root_path unless @answer.user == current_user
     end
 end
