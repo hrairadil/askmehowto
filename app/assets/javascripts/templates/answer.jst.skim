@@ -14,14 +14,14 @@ div id="answer-#{@answer.id}"
                 p
                   a href=attachment.path data-remote='true' data-method='delete' Delete file
   - if @answer.user.id == @answer.current_user_id
-    /.delete
-      a href=answer_path data-remote='true' data-method='delete' Delete answer
+    .delete
+      a href=@answer.question_answer_path data-remote="true" rel="nofollow" data-method="delete" Delete answer
     .edit
       a class="edit-answer-link" data-answer-id=@answer.id href="" Edit
 
     .edit-answer-errors
 
-    form id="edit-answer-#{@answer.id}" class="edit_answer" data-type="json" action=@answer.update_path accept-charset="UTF-8" data-remote="true" method="post"
+    form id="edit-answer-#{@answer.id}" class="edit_answer" data-type="json" action=@answer.question_answer_path accept-charset="UTF-8" data-remote="true" method="post"
       input name="utf8" type="hidden" value="✓"
       input type="hidden" name="_method" value="patch"
       p

@@ -9,7 +9,6 @@ $ ->
     answer_id = $(this).data('answerId')
     $("form#edit-answer-#{answer_id}").show()
 
-
   createAnswerSuccess = (e, data, status, xhr) ->
     answer = $.parseJSON(xhr.responseText)
     $('.answers').append(JST["templates/answer"]({answer: answer}))
