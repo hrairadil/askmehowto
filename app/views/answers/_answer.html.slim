@@ -4,7 +4,11 @@ div id="answer-#{answer.id}"
   p= answer.body
 
   .votes
-    p= link_to 'up', '#'
+    .votes-total
+    .vote-up
+      p= link_to 'up', '#'
+    .vote-down
+    .unvote
 
   = render 'layouts/shared/attachments_list', entity: answer
 

@@ -1,7 +1,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_question, only: [ :create, :update, :destroy, :set_the_best]
-  before_action :set_answer, only: [:update, :destroy, :set_the_best]
+  before_action :set_question, only: [ :create, :update, :destroy, :set_the_best, :vote_up]
+  before_action :set_answer, only: [:update, :destroy, :set_the_best, :vote_up]
   before_action :authorize_user, only: [:update, :destroy]
 
   def create
@@ -28,6 +28,10 @@ class AnswersController < ApplicationController
 
   def set_the_best
     @answer.set_the_best if @question.user == current_user
+  end
+
+  def vote_up
+    render :vote
   end
 
   private

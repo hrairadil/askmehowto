@@ -18,7 +18,7 @@ feature 'Vote for answer', %q{
 
     scenario 'votes up', js: true do
       within '.answers' do
-        click_on 'up'
+        click_on 'vote up'
         within '.votes' do
           expect(page).to have_content '1'
         end
@@ -27,9 +27,48 @@ feature 'Vote for answer', %q{
 
     scenario 'votes down', js: true do
       within '.answers' do
-        click_on 'down'
-        expect(page).to have_conten '-1'
+        click_on 'vote down'
+        within '.votes' do
+          expect(page).to have_content '-1'
+        end
       end
+    end
+  end
+
+  context 'Author can not vote for his answer' do
+    before do
+      sign_in(author)
+      visit question_path(question)
+    end
+
+    scenario 'vote up', js: true do
+      within '.answers' do
+        click_on 'vote up'
+        within '.votes' do
+          expect(page).not_to have_content '1'
+        end
+      end
+    end
+
+    scenario 'vote down', js: true do
+      within '.answers' do
+        click_on 'vote down'
+        within '.votes' do
+          expect(page).not_to have_content '-1'
+        end
+      end
+    end
+  end
+
+  context 'Unauthenticated user can not vote for any answer' do
+    before { visit question_path(question) }
+
+    scenario 'vote up' do
+      expect(page).not_to have_link 'vote up'
+    end
+
+    scenario 'vote down' do
+      expect(page).not_to have_link 'vote down'
     end
   end
 end

@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :questions do
     resources :answers do
       member { patch :set_the_best }
+      member { patch :vote_up }
     end
   end
 end

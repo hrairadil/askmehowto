@@ -153,4 +153,15 @@ describe AnswersController do
       end
     end
   end
+
+  describe 'PATCH #vote' do
+    before { sign_in(user) }
+
+    it 'renders vote json template ' do
+      patch :vote_up, id: another_question.answers.first, question_id: another_question, format: :json
+      expect(response).to render_template :vote
+    end
+
+
+  end
 end
