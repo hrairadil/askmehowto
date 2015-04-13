@@ -2,7 +2,7 @@ class Answer < ActiveRecord::Base
   belongs_to :question
   belongs_to :user
   has_many :attachments, as: :attachable, dependent: :destroy
-  has_many :votes, as: :votable, dependent: :destroy
+  include Voted
 
   validates :body, presence: true
   validates :question_id, presence: true
@@ -19,9 +19,4 @@ class Answer < ActiveRecord::Base
     end
   end
 
-  def vote(user, value)
-    vote = votes.find_or_initialize_by(user: user)
-    vote.value = value
-    vote.save!
-  end
 end

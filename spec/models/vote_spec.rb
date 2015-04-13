@@ -26,9 +26,30 @@ describe Vote do
 
     context 'vote down' do
       it { expect{ answer.vote user, -1 }.to change(answer.votes, :count).by(1) }
+
       it 'changes value down to -1' do
         answer.vote user, -1
         expect(answer.votes.find_by(user: user).value).to eq -1
+      end
+    end
+  end
+
+  describe 'question' do
+    context 'vote up' do
+      it { expect{ question.vote user, 1 }.to change(question.votes, :count).by(1) }
+
+      it 'changes value up to 1' do
+        question.vote user, 1
+        expect(question.votes.find_by(user: user).value).to eq 1
+      end
+    end
+
+    context 'vote down' do
+      it { expect{ question.vote user, -1 }.to change(question.votes, :count).by(1) }
+
+      it 'changes value down to -1' do
+        question.vote user, -1
+        expect(question.votes.find_by(user: user).value).to eq -1
       end
     end
   end
