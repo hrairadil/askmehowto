@@ -1,4 +1,4 @@
-module Voted
+module Votable
   extend ActiveSupport::Concern
 
   included do

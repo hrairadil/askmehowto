@@ -2,7 +2,7 @@ class Answer < ActiveRecord::Base
   belongs_to :question
   belongs_to :user
   has_many :attachments, as: :attachable, dependent: :destroy
-  include Voted
+  include Votable
 
   validates :body, presence: true
   validates :question_id, presence: true
