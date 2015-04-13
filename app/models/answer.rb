@@ -18,4 +18,10 @@ class Answer < ActiveRecord::Base
       self.update(best: true)
     end
   end
+
+  def vote(user, value)
+    vote = votes.find_or_initialize_by(user: user)
+    vote.value = value
+    vote.save!
+  end
 end
