@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :set_question, only: [:show, :update, :destroy]
+  before_action :set_question, only: [:show, :update, :destroy, :vote_up, :vote_down]
   before_action :set_questions, only: [:index, :update, :destroy]
 
   def index
@@ -37,6 +37,16 @@ class QuestionsController < ApplicationController
     else
       flash.now[:alert] = 'This action is restricted'
     end
+  end
+
+  def vote_up
+    @question.vote(current_user, 1)
+    render :vote
+  end
+
+  def vote_down
+    @question.vote(current_user, -1)
+    render :vote
   end
 
   private

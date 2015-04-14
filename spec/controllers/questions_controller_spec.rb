@@ -3,6 +3,9 @@
 describe QuestionsController do
   let(:user) { create :user }
   let(:question) { create :question, user: user }
+  let(:vote_params) {{ id: question,
+                        format: :json}}
+
 
   describe 'GET #index' do
     let(:questions) { create_list :question, 2 }
@@ -153,6 +156,70 @@ describe QuestionsController do
       it 'renders show view' do
         delete :destroy, id: another_user.questions.first, format: :js
         expect(response).to render_template :destroy
+      end
+    end
+  end
+
+  describe 'PATCH #vote_up' do
+    context 'when signed in user' do
+      before { sign_in(user) }
+
+      it 'votes up for answer' do
+        expect{ patch :vote_up, vote_params }.to change(question.votes, :count).by(1)
+      end
+
+      it 'saves vote to the db' do
+        patch :vote_up, vote_params
+        question.reload
+        expect(question.votes.first.value).to eq 1
+      end
+
+      it 'renders vote json template ' do
+        patch :vote_up, vote_params
+        expect(response).to render_template :vote
+      end
+    end
+
+    context 'when guest' do
+      it 'votes for answer' do
+        expect{ patch :vote_up, vote_params }.not_to change(question.votes, :count)
+      end
+
+      it 'renders vote json template ' do
+        patch :vote_up, vote_params
+        expect(response).to be_unauthorized
+      end
+    end
+  end
+
+  describe 'PATCH #vote_down' do
+    context 'when signed in user' do
+      before { sign_in(user) }
+
+      it 'votes up for answer' do
+        expect{ patch :vote_down, vote_params }.to change(question.votes, :count).by(1)
+      end
+
+      it 'saves vote to the db' do
+        patch :vote_down, vote_params
+        question.reload
+        expect(question.votes.first.value).to eq -1
+      end
+
+      it 'renders vote json template ' do
+        patch :vote_down, vote_params
+        expect(response).to render_template :vote
+      end
+    end
+
+    context 'when guest' do
+      it 'votes for answer' do
+        expect{ patch :vote_down, vote_params }.not_to change(question.votes, :count)
+      end
+
+      it 'renders vote json template ' do
+        patch :vote_down, vote_params
+        expect(response).to be_unauthorized
       end
     end
   end
