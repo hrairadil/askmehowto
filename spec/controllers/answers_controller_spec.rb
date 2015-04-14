@@ -1,13 +1,18 @@
 require 'rails_helper'
 
 describe AnswersController do
-  let!(:user) { create :user }
-  let!(:another_user) { create :user }
+  let(:user) { create :user }
+  let(:another_user) { create :user }
   let!(:question) { create :question, user: user }
   let!(:another_question) { create :question, :with_answers, user: another_user }
   let!(:answer) { create :answer, question: question, user: user }
   let!(:authors_answer) { create :answer, question: question, user: user }
   let!(:another_users_answer) { create :answer, question: question, user: another_user }
+  let(:voted_answer) { another_question.answers.take }
+  let!(:vote_params) {{ id: voted_answer,
+                       question_id: another_question,
+                       format: :json}}
+
 
   describe 'POST #create' do
     before { sign_in(user) }
@@ -154,14 +159,67 @@ describe AnswersController do
     end
   end
 
-  describe 'PATCH #vote' do
-    before { sign_in(user) }
+  describe 'PATCH #vote_up' do
+    context 'when signed in user' do
+      before { sign_in(user) }
 
-    it 'renders vote json template ' do
-      patch :vote_up, id: another_question.answers.first, question_id: another_question, format: :json
-      expect(response).to render_template :vote
+      it 'votes up for answer' do
+        expect{ patch :vote_up, vote_params }.to change(voted_answer.votes, :count).by(1)
+      end
+
+      it 'saves vote to the db' do
+        patch :vote_up, vote_params
+        voted_answer.reload
+        expect(voted_answer.votes.first.value).to eq 1
+      end
+
+      it 'renders vote json template ' do
+        patch :vote_up, vote_params
+        expect(response).to render_template :vote
+      end
     end
 
+    context 'when guest' do
+      it 'votes for answer' do
+        expect{ patch :vote_up, vote_params }.not_to change(voted_answer.votes, :count)
+      end
 
+      it 'renders vote json template ' do
+        patch :vote_up, vote_params
+        expect(response).to be_unauthorized
+      end
+    end
+  end
+
+  describe 'PATCH #vote_down' do
+    context 'when signed in user' do
+      before { sign_in(user) }
+
+      it 'votes up for answer' do
+        expect{ patch :vote_down, vote_params }.to change(voted_answer.votes, :count).by(1)
+      end
+
+      it 'saves vote to the db' do
+        patch :vote_down, vote_params
+        voted_answer.reload
+        expect(voted_answer.votes.first.value).to eq -1
+      end
+
+      it 'renders vote json template ' do
+        patch :vote_down, vote_params
+        expect(response).to render_template :vote
+      end
+    end
+
+    context 'when guest' do
+      it 'votes for answer' do
+        expect{ patch :vote_down, vote_params }.not_to change(voted_answer.votes, :count)
+      end
+
+      it 'renders vote json template ' do
+        patch :vote_down, vote_params
+        expect(response).to be_unauthorized
+      end
+    end
   end
 end

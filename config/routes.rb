@@ -6,9 +6,10 @@ Rails.application.routes.draw do
   resources :attachments, only: [:destroy]
 
   resources :questions do
-    resources :answers do
+    resources :answers, only: [:create, :update, :destroy] do
       member { patch :set_the_best }
       member { patch :vote_up }
+      member { patch :vote_down }
     end
   end
 end
