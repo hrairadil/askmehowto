@@ -11,6 +11,7 @@ describe Vote do
   it { should validate_inclusion_of(:value).in_array([-1, 1]) }
 
   let(:user) { create :user }
+  let(:another_user) { create :user }
   let(:question) { create :question, user: user }
   let(:answer) { create :answer, question: question }
 
@@ -18,7 +19,7 @@ describe Vote do
   [:question, :answer].each do |resource_name|
     before { @resource = send resource_name }
 
-    describe "#{@resource}" do
+    describe "#{resource_name}" do
       context 'vote up' do
         it { expect{ @resource.vote user, 1 }.to change(@resource.votes, :count).by(1) }
 
@@ -34,6 +35,21 @@ describe Vote do
         it 'changes value down to -1' do
           @resource.vote user, -1
           expect(@resource.votes.find_by(user: user).value).to eq -1
+        end
+      end
+
+      context 'votes total' do
+        before { @resource.vote user, 1}
+        it { expect(@resource.total_votes).to eq 1 }
+
+        it 'calculates total positive votes' do
+          @resource.vote another_user, 1
+          expect(@resource.total_votes).to eq 2
+        end
+
+        it 'calculates total votes' do
+          @resource.vote another_user, -1
+          expect(@resource.total_votes).to eq 0
         end
       end
     end

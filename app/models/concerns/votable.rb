@@ -10,4 +10,8 @@ module Votable
     vote.value = value
     vote.save!
   end
+
+  def total_votes
+    votes.sum :value
+  end
 end

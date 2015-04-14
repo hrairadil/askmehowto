@@ -5,9 +5,12 @@ div id="answer-#{answer.id}"
 
   .votes
     .votes-total
+      | Total rating:
+      = answer.total_votes
     .vote-up
-      p= link_to 'up', '#'
+      p= link_to 'vote up', vote_up_question_answer_path(question, answer), method: :patch, data: { type: :json }, remote: true
     .vote-down
+      p= link_to 'vote down', vote_down_question_answer_path(question, answer), method: :patch, data: { type: :json }, remote: true
     .unvote
 
   = render 'layouts/shared/attachments_list', entity: answer
