@@ -11,7 +11,7 @@ feature 'Vote for answer', %q{
   given!(:answer) { create :answer, question: question, user: author }
   given!(:answer_with_votes) { create :answer, :with_votes, number_of_votes: 4, question: question }
 
-  context 'Authenticated user' do
+  context 'Authenticated user', js: true do
     before do
       sign_in(user)
       visit question_path(question)
@@ -35,16 +35,15 @@ feature 'Vote for answer', %q{
       end
     end
 
-    scenario "sees the correct total rating when vote up", js: true do
+    scenario 'sees the correct total rating when vote up', js: true do
       within "#answer-#{answer_with_votes.id}" do
         expect(page).to have_content '4'
         click_on 'vote up'
         expect(page).to have_content '5'
-        click_on 'vote down'
       end
     end
 
-    scenario "sees the correct total rating when vote down", js: true do
+    scenario 'sees the correct total rating when vote down', js: true do
       within "#answer-#{answer_with_votes.id}" do
         expect(page).to have_content '4'
         click_on 'vote down'
@@ -53,7 +52,7 @@ feature 'Vote for answer', %q{
     end
   end
 
-  context 'Author can not vote for his answer', pending: true do
+  context 'Author can not vote for his answer' do
     before do
       sign_in(author)
       visit question_path(question)

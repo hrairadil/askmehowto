@@ -41,11 +41,7 @@ class AnswersController < ApplicationController
     end
 
     def set_question
-      @question = if params.has_key?(:question_id)
-                    Question.find(params[:question_id])
-                  else
-                    @answer.question
-                  end
+      @question = params.has_key?(:question_id) ? Question.find(params[:question_id]) : @answer.question
     end
 
     def authorize_user

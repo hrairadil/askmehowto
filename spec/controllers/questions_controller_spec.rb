@@ -2,8 +2,10 @@
 
 describe QuestionsController do
   let(:user) { create :user }
+  let(:another_user) { create :user }
   let(:question) { create :question, user: user }
-  let(:vote_params) {{ id: question,
+  let(:another_question) { create :question, user: another_user }
+  let(:vote_params) {{ id: another_question,
                         format: :json}}
 
 
@@ -165,13 +167,13 @@ describe QuestionsController do
       before { sign_in(user) }
 
       it 'votes up for answer' do
-        expect{ patch :vote_up, vote_params }.to change(question.votes, :count).by(1)
+        expect{ patch :vote_up, vote_params }.to change(another_question.votes, :count).by(1)
       end
 
       it 'saves vote to the db' do
         patch :vote_up, vote_params
         question.reload
-        expect(question.votes.first.value).to eq 1
+        expect(another_question.votes.first.value).to eq 1
       end
 
       it 'renders vote json template ' do
@@ -180,9 +182,22 @@ describe QuestionsController do
       end
     end
 
+    context 'when signed in as author' do
+      before { sign_in(user) }
+
+      let(:params) {{ id: question, format: :json }}
+
+      it { expect{ patch :vote_up, params }.not_to change(question.votes, :count) }
+
+      it 'renders status forbidden' do
+        patch :vote_up, params
+        expect(response).to be_forbidden
+      end
+    end
+
     context 'when guest' do
       it 'votes for answer' do
-        expect{ patch :vote_up, vote_params }.not_to change(question.votes, :count)
+        expect{ patch :vote_up, vote_params }.not_to change(another_question.votes, :count)
       end
 
       it 'renders vote json template ' do
@@ -197,13 +212,13 @@ describe QuestionsController do
       before { sign_in(user) }
 
       it 'votes up for answer' do
-        expect{ patch :vote_down, vote_params }.to change(question.votes, :count).by(1)
+        expect{ patch :vote_down, vote_params }.to change(another_question.votes, :count).by(1)
       end
 
       it 'saves vote to the db' do
         patch :vote_down, vote_params
         question.reload
-        expect(question.votes.first.value).to eq -1
+        expect(another_question.votes.first.value).to eq -1
       end
 
       it 'renders vote json template ' do
@@ -212,9 +227,22 @@ describe QuestionsController do
       end
     end
 
+    context 'when signed in as author' do
+      before { sign_in(user) }
+
+      let(:params) {{ id: question, format: :json }}
+
+      it { expect{ patch :vote_down, params }.not_to change(question.votes, :count) }
+
+      it 'renders status forbidden' do
+        patch :vote_up, params
+        expect(response).to be_forbidden
+      end
+    end
+
     context 'when guest' do
       it 'votes for answer' do
-        expect{ patch :vote_down, vote_params }.not_to change(question.votes, :count)
+        expect{ patch :vote_down, vote_params }.not_to change(another_question.votes, :count)
       end
 
       it 'renders vote json template ' do

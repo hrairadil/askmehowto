@@ -42,18 +42,16 @@ feature 'Vote for question', %q{
 
     scenario 'vote up', js: true do
       within '.question' do
-        click_on 'vote up'
         within '.votes' do
-          expect(page).not_to have_content '1'
+          expect(page).not_to have_link 'vote up'
         end
       end
     end
 
     scenario 'vote down', js: true do
       within '.question' do
-        click_on 'vote down'
         within '.votes' do
-          expect(page).not_to have_content '-1'
+          expect(page).not_to have_link 'vote down'
         end
       end
     end

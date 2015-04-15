@@ -160,7 +160,7 @@ describe AnswersController do
   end
 
   describe 'PATCH #vote_up' do
-    context 'when signed in user' do
+    context 'when signed in as user' do
       before { sign_in(user) }
 
       it 'votes up for answer' do
@@ -179,6 +179,18 @@ describe AnswersController do
       end
     end
 
+    context 'when signed in as author' do
+      before { sign_in(user) }
+      let(:params) {{ id: answer, question_id: question, format: :json }}
+
+      it { expect{ patch :vote_up, params }.not_to change(answer.votes, :count) }
+
+      it 'renders status forbidden' do
+        patch :vote_up, params
+        expect(response).to be_forbidden
+      end
+    end
+
     context 'when guest' do
       it 'votes for answer' do
         expect{ patch :vote_up, vote_params }.not_to change(voted_answer.votes, :count)
@@ -192,7 +204,7 @@ describe AnswersController do
   end
 
   describe 'PATCH #vote_down' do
-    context 'when signed in user' do
+    context 'when signed in as user' do
       before { sign_in(user) }
 
       it 'votes up for answer' do
@@ -208,6 +220,19 @@ describe AnswersController do
       it 'renders vote json template ' do
         patch :vote_down, vote_params
         expect(response).to render_template :vote
+      end
+    end
+
+    context 'when signed in as author' do
+      before { sign_in(user) }
+
+      let(:params) {{ id: answer, question_id: question, format: :json }}
+
+      it { expect{ patch :vote_down, params }.not_to change(answer.votes, :count) }
+
+      it 'renders status forbidden' do
+        patch :vote_up, params
+        expect(response).to be_forbidden
       end
     end
 
