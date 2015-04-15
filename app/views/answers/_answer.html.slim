@@ -3,20 +3,8 @@ div id="answer-#{answer.id}"
     div id='best-answer'
   p= answer.body
 
-  .votes
-    .votes-total
-      p
-        | Total rating:
-        = answer.total_votes
-
-    - if user_signed_in?
-      .vote-up
-        p= link_to 'vote up', vote_up_answer_path(answer), method: :patch, data: { type: :json }, remote: true
-      .vote-down
-        p= link_to 'vote down', vote_down_answer_path(answer), method: :patch, data: { type: :json }, remote: true
-      .unvote
-
-  = render 'layouts/shared/attachments_list', entity: answer
+  = render 'layouts/shared/votes', resource: answer
+  = render 'layouts/shared/attachments_list', resource: answer
 
   - if question.user == current_user and current_user.present?
     = link_to 'Best', set_the_best_answer_path(answer), method: :patch, remote: true
@@ -33,6 +21,6 @@ div id="answer-#{answer.id}"
           p
             = f.label :body, 'Answer'
             = f.text_area :body
-            = render 'layouts/shared/attachments_list', entity: answer
+            = render 'layouts/shared/attachments_list', resource: answer
           p
             = f.submit 'Save'

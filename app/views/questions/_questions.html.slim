@@ -19,7 +19,7 @@
 
             = f.submit 'Save'
 
-            = render 'layouts/shared/attachments_list', entity: question
+            = render 'layouts/shared/attachments_list', resource: question
 
 -if user_signed_in?
   p= link_to 'Ask question', new_question_path

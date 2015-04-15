@@ -40,6 +40,7 @@ feature 'Vote for answer', %q{
         expect(page).to have_content '4'
         click_on 'vote up'
         expect(page).to have_content '5'
+        click_on 'vote down'
       end
     end
 

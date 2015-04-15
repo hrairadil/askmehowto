@@ -9,7 +9,7 @@ feature 'Vote for question', %q{
   given(:author) { create :user }
   given(:question) { create :question, user: author }
 
-  context 'Authenticated user', pending: true do
+  context 'Authenticated user' do
     before do
       sign_in(user)
       visit question_path(question)
@@ -34,7 +34,7 @@ feature 'Vote for question', %q{
     end
   end
 
-  context 'Author can not vote for his question', pending: true do
+  context 'Author can not vote for his question' do
     before do
       sign_in(author)
       visit question_path(question)
@@ -59,7 +59,7 @@ feature 'Vote for question', %q{
     end
   end
 
-  context 'Unauthenticated user can not vote for any question', pending: true do
+  context 'Unauthenticated user can not vote for any question' do
     before { visit question_path(question) }
 
     scenario 'vote up' do
