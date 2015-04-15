@@ -14,7 +14,7 @@ $ ->
     $('.answers').append(JST["templates/answer"]({answer: answer}))
     $('#create-answer-body').val('')
 
-  createAnswerError =(e, xhr, status, error) ->
+  createAnswerError = (e, xhr, status, error) ->
     $('.answer-errors').html('')
     errors = $.parseJSON(xhr.responseText)
     $.each errors, (index, value) ->
@@ -30,9 +30,14 @@ $ ->
     $.each errors, (index, value) ->
       $('.edit-answer-errors').append(value)
 
+  updateVotes = (e, data, status, xhr) ->
+    resource = $.parseJSON(xhr.responseText)
+    $("#answer-#{resource.id} .votes").replaceWith(JST["templates/votes"]({resource: resource}))
+
   $(document).on 'click', '.edit-answer-link', editAnswer
   $(document).on 'ajax:success', 'form.new_answer', createAnswerSuccess
   $(document).on 'ajax:error', 'form.new_answer', createAnswerError
   $(document).on 'ajax:success', 'form.edit_answer', editAnswerSuccess
   $(document).on 'ajax:error', 'form.edit_answer', editAnswerError
+  $(document).on 'ajax:success', '.answers', updateVotes
 

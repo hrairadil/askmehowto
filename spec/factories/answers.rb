@@ -17,5 +17,16 @@ FactoryGirl.define do
         create_list(:attachment, evaluator.number_of_attachments, attachable: answer)
       end
     end
+
+    trait :with_votes do
+      transient do
+        number_of_votes 1
+      end
+
+      after(:create) do |answer, evaluator|
+        create_list(:vote, evaluator.number_of_votes, votable: answer)
+      end
+    end
+
   end
 end
