@@ -5,15 +5,16 @@ Rails.application.routes.draw do
 
   resources :attachments, only: [:destroy]
 
-  resources :questions do
+  concern :votable do
+    member do
+      patch :vote_up
+      patch :vote_down
+    end
+  end
 
-    member { patch :vote_up }
-    member { patch :vote_down }
-
-    resources :answers, only: [:create, :update, :destroy] do
+  resources :questions, concerns: :votable do
+    resources :answers, only: [:create, :update, :destroy], concerns: :votable, shallow: true do
       member { patch :set_the_best }
-      member { patch :vote_up }
-      member { patch :vote_down }
     end
   end
 end

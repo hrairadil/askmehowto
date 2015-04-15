@@ -1,7 +1,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_question, only: [ :create, :update, :destroy, :set_the_best]
   before_action :set_answer, only: [:update, :destroy, :set_the_best]
+  before_action :set_question, only: [ :create, :update, :destroy, :set_the_best]
   before_action :authorize_user, only: [:update, :destroy]
   include Voted
 
@@ -37,11 +37,15 @@ class AnswersController < ApplicationController
     end
 
     def set_answer
-      @answer = @question.answers.find(params[:id])
+      @answer = Answer.find(params[:id])
     end
 
     def set_question
-      @question = Question.find(params[:question_id])
+      @question = if params.has_key?(:question_id)
+                    Question.find(params[:question_id])
+                  else
+                    @answer.question
+                  end
     end
 
     def authorize_user
