@@ -58,15 +58,10 @@ feature 'Vote for answer', %q{
       visit question_path(question)
     end
 
-    scenario 'vote up', js: true do
+    scenario 'vote up/down' do
       within "#answer-#{answer.id}" do
         expect(page).not_to have_link 'vote up'
-      end
-    end
-
-    scenario 'vote down', js: true do
-      within "#answer-#{answer.id}" do
-          expect(page).not_to have_link 'vote down'
+        expect(page).not_to have_link 'vote down'
       end
     end
   end
@@ -74,11 +69,8 @@ feature 'Vote for answer', %q{
   context 'Unauthenticated user can not vote for any answer' do
     before { visit question_path(question) }
 
-    scenario 'vote up' do
+    scenario 'vote up/down' do
       expect(page).not_to have_link 'vote up'
-    end
-
-    scenario 'vote down' do
       expect(page).not_to have_link 'vote down'
     end
   end
