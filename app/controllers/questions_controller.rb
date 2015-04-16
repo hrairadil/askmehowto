@@ -2,6 +2,7 @@ class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :set_question, only: [:show, :update, :destroy]
   before_action :set_questions, only: [:index, :update, :destroy]
+  include Voted
 
   def index
   end

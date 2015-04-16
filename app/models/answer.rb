@@ -2,6 +2,7 @@ class Answer < ActiveRecord::Base
   belongs_to :question
   belongs_to :user
   has_many :attachments, as: :attachable, dependent: :destroy
+  include Votable
 
   validates :body, presence: true
   validates :question_id, presence: true
@@ -17,4 +18,5 @@ class Answer < ActiveRecord::Base
       self.update(best: true)
     end
   end
+
 end

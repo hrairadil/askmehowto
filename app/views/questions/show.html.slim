@@ -1,8 +1,9 @@
 .question
   h1= @question.title
   p= @question.body
-  = render 'layouts/shared/attachments_list', entity: @question
+  p= render 'layouts/shared/votes', resource: @question
+  = render 'layouts/shared/attachments_list', resource: @question
 .answers
-  = render 'answers'
+  = render 'answers/index'
 .create-answer
-  = render 'questions/answer_create_form'
+  = render 'answers/form'

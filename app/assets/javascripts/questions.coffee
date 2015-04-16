@@ -10,3 +10,9 @@ $ ->
     $("form#edit-question-#{question_id}").show()
 
   $(document).on 'click', '.edit-question-link', editQuestion
+
+  updateVotes = (e, data, status, xhr) ->
+    resource = $.parseJSON(xhr.responseText)
+    $(".question .votes").replaceWith(JST["templates/votes"]({resource: resource}))
+
+  $(document).on 'ajax:success', '.question', updateVotes

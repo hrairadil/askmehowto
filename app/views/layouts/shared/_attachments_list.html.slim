@@ -1,6 +1,6 @@
 ul
-  - entity.attachments.each do |a|
+  - resource.attachments.each do |a|
     div class="file-#{a.id}"
       li= link_to a.file.identifier, a.file.url
-      - if entity.user == current_user
+      - if resource.user == current_user
         p= link_to 'Delete file', attachment_path(a.id), method: :delete, remote: true

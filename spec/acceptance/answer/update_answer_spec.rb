@@ -38,6 +38,18 @@ feature 'Answer edit', %q{
         expect(page).not_to have_content answer.body
         expect(page).to have_content 'edited answer'
         expect(page).not_to have_selector 'textarea'
+        expect(page).to have_link 'Edit'
+        expect(page).to have_link 'Delete'
+      end
+    end
+
+    scenario 'tries to submit an empty edit form', js: true do
+      within "#answer-#{answer.id}" do
+        click_on 'Edit'
+        fill_in 'Answer', with: ' '
+        click_on 'Save'
+
+        expect(page).to have_content "Body can't be blank"
       end
     end
 
