@@ -154,7 +154,7 @@ describe AnswersController do
   end
 
   describe 'PATCH #vote_up' do
-    context 'when signed in as user' do
+    context 'User' do
       before { sign_in(user) }
 
       it 'votes up for answer' do
@@ -163,7 +163,6 @@ describe AnswersController do
 
       it 'saves vote to the db' do
         patch :vote_up, vote_params
-        voted_answer.reload
         vote = voted_answer.votes.find_by(user: user)
         expect(vote.value).to eq 1
       end
@@ -172,9 +171,16 @@ describe AnswersController do
         patch :vote_up, vote_params
         expect(response).to render_template :vote
       end
+
+      it 'denies voting second time' do
+        patch :vote_up, vote_params
+        patch :vote_down, vote_params
+        vote = voted_answer.votes.find_by(user: user)
+        expect(vote.value).to eq 1
+      end
     end
 
-    context 'when signed in as author' do
+    context 'Author' do
       before { sign_in(user) }
       let(:params) {{ id: answer, format: :json }}
 
@@ -186,7 +192,7 @@ describe AnswersController do
       end
     end
 
-    context 'when guest' do
+    context 'Guest' do
       it 'votes for answer' do
         expect{ patch :vote_up, vote_params }.not_to change(voted_answer.votes, :count)
       end
@@ -199,7 +205,7 @@ describe AnswersController do
   end
 
   describe 'PATCH #vote_down' do
-    context 'when signed in as user' do
+    context 'User' do
       before { sign_in(user) }
 
       it 'votes up for answer' do
@@ -213,13 +219,20 @@ describe AnswersController do
         expect(vote.value).to eq -1
       end
 
+      it 'denies voting second time' do
+        patch :vote_down, vote_params
+        patch :vote_up, vote_params
+        vote = voted_answer.votes.find_by(user: user)
+        expect(vote.value).to eq -1
+      end
+
       it 'renders vote json template ' do
         patch :vote_down, vote_params
         expect(response).to render_template :vote
       end
     end
 
-    context 'when signed in as author' do
+    context 'Author' do
       before { sign_in(user) }
 
       let(:params) {{ id: answer, format: :json }}
@@ -232,7 +245,7 @@ describe AnswersController do
       end
     end
 
-    context 'when guest' do
+    context 'Guest' do
       it 'votes for answer' do
         expect{ patch :vote_down, vote_params }.not_to change(voted_answer.votes, :count)
       end

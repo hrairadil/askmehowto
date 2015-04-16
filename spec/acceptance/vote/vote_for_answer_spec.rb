@@ -50,6 +50,14 @@ feature 'Vote for answer', %q{
         expect(page).to have_content '3'
       end
     end
+
+    scenario 'can not vote multiple times for an answer', js: true do
+      within "#answer-#{answer.id}" do
+        click_on 'vote up'
+        expect(page).not_to have_link 'vote up'
+        expect(page).not_to have_link 'vote down'
+      end
+    end
   end
 
   context 'Author can not vote for his answer' do

@@ -32,6 +32,14 @@ feature 'Vote for question', %q{
         end
       end
     end
+
+    scenario 'can not vote multiple times for a question', js: true do
+      within '.question' do
+        click_on 'vote down'
+        expect(page).not_to have_link 'vote up'
+        expect(page).not_to have_link 'vote down'
+      end
+    end
   end
 
   context 'Author can not vote for his question' do

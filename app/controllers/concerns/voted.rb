@@ -18,7 +18,7 @@ module Voted
   private
 
     def authorize_for_voting
-      if @resource.user == current_user
+      if @resource.user == current_user or @resource.voted_by?(current_user)
         render status: :forbidden, text: 'forbidden action'
       end
     end

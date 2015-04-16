@@ -11,6 +11,10 @@ module Votable
     vote.save!
   end
 
+  def voted_by?(user)
+    votes.where(user_id: user).exists?
+  end
+
   def total_votes
     votes.sum :value
   end

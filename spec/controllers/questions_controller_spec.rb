@@ -176,6 +176,12 @@ describe QuestionsController do
         expect(another_question.votes.first.value).to eq 1
       end
 
+      it 'denies voting second time' do
+        patch :vote_up, vote_params
+        patch :vote_down, vote_params
+        expect(another_question.votes.first.value).to eq 1
+      end
+
       it 'renders vote json template ' do
         patch :vote_up, vote_params
         expect(response).to render_template :vote
@@ -218,6 +224,12 @@ describe QuestionsController do
       it 'saves vote to the db' do
         patch :vote_down, vote_params
         question.reload
+        expect(another_question.votes.first.value).to eq -1
+      end
+
+      it 'denies voting second time' do
+        patch :vote_down, vote_params
+        patch :vote_up, vote_params
         expect(another_question.votes.first.value).to eq -1
       end
 
