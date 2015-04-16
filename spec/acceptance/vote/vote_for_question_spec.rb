@@ -33,6 +33,15 @@ feature 'Vote for question', %q{
       end
     end
 
+    scenario 'unvotes', js: true do
+      within '.question' do
+        click_on 'vote up'
+        expect(page).to have_content '1'
+        click_on 'unvote'
+        expect(page).to have_content '0'
+      end
+    end
+
     scenario 'can not vote multiple times for a question', js: true do
       within '.question' do
         click_on 'vote down'
@@ -48,11 +57,12 @@ feature 'Vote for question', %q{
       visit question_path(question)
     end
 
-    scenario 'vote up/down' do
+    scenario 'vote un/up/down' do
       within '.question' do
         within '.votes' do
           expect(page).not_to have_link 'vote up'
           expect(page).not_to have_link 'vote down'
+          expect(page).not_to have_link 'unvote'
         end
       end
     end
@@ -61,9 +71,10 @@ feature 'Vote for question', %q{
   context 'Unauthenticated user can not vote for any question' do
     before { visit question_path(question) }
 
-    scenario 'vote up/down' do
+    scenario 'vote un/up/down' do
       expect(page).not_to have_link 'vote up'
       expect(page).not_to have_link 'vote down'
+      expect(page).not_to have_link 'unvote'
     end
   end
 end

@@ -39,6 +39,11 @@ describe Vote do
         end
       end
 
+      context 'unvote' do
+        before { @resource.vote user, 1 }
+        it { expect{ @resource.unvote user}.to change(@resource.votes, :count).by(-1) }
+      end
+
       context 'votes total' do
         before { @resource.vote user, 1}
         it { expect(@resource.total_votes).to eq 1 }

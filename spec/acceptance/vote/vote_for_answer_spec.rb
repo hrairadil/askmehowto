@@ -35,6 +35,15 @@ feature 'Vote for answer', %q{
       end
     end
 
+    scenario 'unvotes', js: true do
+      within "#answer-#{answer.id}" do
+        click_on 'vote up'
+        expect(page).to have_content '1'
+        click_on 'unvote'
+        expect(page).to have_content '0'
+      end
+    end
+
     scenario 'sees the correct total rating when vote up', js: true do
       within "#answer-#{answer_with_votes.id}" do
         expect(page).to have_content '4'
@@ -66,10 +75,11 @@ feature 'Vote for answer', %q{
       visit question_path(question)
     end
 
-    scenario 'vote up/down' do
+    scenario 'vote un/up/down' do
       within "#answer-#{answer.id}" do
         expect(page).not_to have_link 'vote up'
         expect(page).not_to have_link 'vote down'
+        expect(page).not_to have_link 'unvote'
       end
     end
   end
@@ -77,9 +87,10 @@ feature 'Vote for answer', %q{
   context 'Unauthenticated user can not vote for any answer' do
     before { visit question_path(question) }
 
-    scenario 'vote up/down' do
+    scenario 'vote un/up/down' do
       expect(page).not_to have_link 'vote up'
       expect(page).not_to have_link 'vote down'
+      expect(page).not_to have_link 'unvote'
     end
   end
 end

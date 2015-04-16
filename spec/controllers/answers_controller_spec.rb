@@ -235,12 +235,11 @@ describe AnswersController do
     context 'Author' do
       before { sign_in(user) }
 
-      let(:params) {{ id: answer, format: :json }}
-
-      it { expect{ patch :vote_down, params }.not_to change(answer.votes, :count) }
+      it { expect{ patch :vote_down, id: answer, format: :json }
+               .not_to change(answer.votes, :count) }
 
       it 'renders status forbidden' do
-        patch :vote_up, params
+        patch :vote_up, id: answer, format: :json
         expect(response).to be_forbidden
       end
     end
@@ -250,8 +249,44 @@ describe AnswersController do
         expect{ patch :vote_down, vote_params }.not_to change(voted_answer.votes, :count)
       end
 
-      it 'renders vote json template ' do
+      it 'renders status unauthorized' do
         patch :vote_down, vote_params
+        expect(response).to be_unauthorized
+      end
+    end
+  end
+
+  describe 'PATCH #unvote' do
+    context 'User' do
+      before do
+        sign_in(user)
+        patch :vote_up, vote_params
+      end
+
+      it { expect{ patch :unvote, vote_params }
+               .to change(voted_answer.votes, :count).by(-1) }
+
+      it 'renders vote json template' do
+        patch :unvote, vote_params
+        expect(response).to render_template :vote
+      end
+    end
+
+    context 'Author' do
+      before { sign_in(user) }
+
+      it 'can not unvote' do
+        expect{ patch :unvote, id: answer, format: :json}.not_to change(answer.votes, :count)
+      end
+    end
+
+    context 'Guest' do
+      it 'can not unvote' do
+        expect{ patch :unvote, vote_params }.not_to change(voted_answer.votes, :count)
+      end
+
+      it 'renders status unauthorized' do
+        patch :unvote, id: answer, format: :json
         expect(response).to be_unauthorized
       end
     end

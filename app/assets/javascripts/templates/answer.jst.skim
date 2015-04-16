@@ -7,14 +7,18 @@ div id="answer-#{@answer.id}"
       p
         | Total rating:
         = @answer.total_votes
-    - if @answer.voted_by_current_user?
+    - if @answer.voted
+      .unvote
+        p
+          a href=@answer.unvote_path data-type="json" data-remote="true" rel="nofollow" data-method="patch" unvote
+    - else
       .vote-up
         p
           a href=@answer.vote_up_path data-type="json" data-remote="true" rel="nofollow" data-method="patch" vote up
       .vote-down
         p
           a href=@answer.vote_down_path data-type="json" data-remote="true" rel="nofollow" data-method="patch" vote down
-    .unvote
+
   -if @answer.attachments.length > 0
     ul
       -for attachment in @answer.attachments

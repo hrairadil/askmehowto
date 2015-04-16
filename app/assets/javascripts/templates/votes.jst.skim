@@ -3,11 +3,14 @@
     p
       | Total rating:
       = @resource.total_votes
-  - if @resource.voted_by_current_user?
+  - if @resource.voted
+    .unvote
+      p
+        a href=@resource.unvote_path data-type="json" data-remote="true" rel="nofollow" data-method="patch" unvote
+  - else
     .vote-up
       p
         a href=@resource.vote_up_path data-type="json" data-remote="true" rel="nofollow" data-method="patch" vote up
     .vote-down
       p
         a href=@resource.vote_down_path data-type="json" data-remote="true" rel="nofollow" data-method="patch" vote down
-  .unvote

@@ -263,4 +263,40 @@ describe QuestionsController do
       end
     end
   end
+
+  describe 'PATCH #unvote' do
+    context 'User' do
+      before do
+        sign_in(user)
+        patch :vote_up, vote_params
+      end
+
+      it { expect{ patch :unvote, vote_params }
+               .to change(another_question.votes, :count).by(-1) }
+
+      it 'renders vote json template' do
+        patch :unvote, vote_params
+        expect(response).to render_template :vote
+      end
+    end
+
+    context 'Author' do
+      before { sign_in(user) }
+
+      it 'can not unvote' do
+        expect{ patch :unvote, id: question, format: :json}.not_to change(question.votes, :count)
+      end
+    end
+
+    context 'Guest' do
+      it 'can not unvote' do
+        expect{ patch :unvote, vote_params }.not_to change(another_question.votes, :count)
+      end
+
+      it 'renders status unauthorized' do
+        patch :unvote, id: question, format: :json
+        expect(response).to be_unauthorized
+      end
+    end
+  end
 end

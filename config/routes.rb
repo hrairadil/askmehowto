@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     member do
       patch :vote_up
       patch :vote_down
+      patch :unvote
     end
   end
 

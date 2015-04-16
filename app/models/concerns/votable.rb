@@ -11,8 +11,12 @@ module Votable
     vote.save!
   end
 
+  def unvote(user)
+    votes.where(user: user).destroy_all
+  end
+
   def voted_by?(user)
-    votes.where(user_id: user).exists?
+    votes.where(user: user).exists?
   end
 
   def total_votes
