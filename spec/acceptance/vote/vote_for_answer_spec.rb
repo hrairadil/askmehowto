@@ -43,19 +43,19 @@ feature 'Vote for answer', %q{
       end
     end
 
-    scenario 'sees the correct total rating when vote down', js: true do
-      within "#answer-#{answer_with_votes.id}" do
-        expect(page).to have_content '4'
-        click_on 'vote down'
-        expect(page).to have_content '3'
-      end
-    end
-
     scenario 'can not vote multiple times for an answer', js: true do
       within "#answer-#{answer.id}" do
         click_on 'vote up'
         expect(page).not_to have_link 'vote up'
         expect(page).not_to have_link 'vote down'
+      end
+    end
+
+    scenario 'sees the correct total rating when vote down', js: true do
+      within "#answer-#{answer_with_votes.id}" do
+        expect(page).to have_content '4'
+        click_on 'vote down'
+        expect(page).to have_content '3'
       end
     end
   end

@@ -7,12 +7,13 @@ div id="answer-#{@answer.id}"
       p
         | Total rating:
         = @answer.total_votes
-    .vote-up
-      p
-        a href=@answer.vote_up_path data-type="json" data-remote="true" rel="nofollow" data-method="patch" vote up
-    .vote-down
-      p
-        a href=@answer.vote_down_path data-type="json" data-remote="true" rel="nofollow" data-method="patch" vote down
+    - if @answer.voted_by_current_user?
+      .vote-up
+        p
+          a href=@answer.vote_up_path data-type="json" data-remote="true" rel="nofollow" data-method="patch" vote up
+      .vote-down
+        p
+          a href=@answer.vote_down_path data-type="json" data-remote="true" rel="nofollow" data-method="patch" vote down
     .unvote
   -if @answer.attachments.length > 0
     ul

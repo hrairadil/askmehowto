@@ -3,10 +3,11 @@
     p
       | Total rating:
       = @resource.total_votes
-  .vote-up
-    p
-      a href=@resource.vote_up_path data-type="json" data-remote="true" rel="nofollow" data-method="patch" vote up
-  .vote-down
-    p
-      a href=@resource.vote_down_path data-type="json" data-remote="true" rel="nofollow" data-method="patch" vote down
+  - if @resource.voted_by_current_user?
+    .vote-up
+      p
+        a href=@resource.vote_up_path data-type="json" data-remote="true" rel="nofollow" data-method="patch" vote up
+    .vote-down
+      p
+        a href=@resource.vote_down_path data-type="json" data-remote="true" rel="nofollow" data-method="patch" vote down
   .unvote
