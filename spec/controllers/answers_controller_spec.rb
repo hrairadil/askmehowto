@@ -55,7 +55,6 @@ describe AnswersController do
     before { sign_in(user) }
     let(:update_params) {{ id: answer,
                            answer: attributes_for(:answer),
-                           question_id: question,
                            user_id: user,
                            format: :json }}
 
@@ -78,7 +77,6 @@ describe AnswersController do
     it "does not update another user's answer" do
       patch :update, id: another_users_answer,
                      answer: { body: 'should not update this body'} ,
-                     question_id: question,
                      user_id: another_user,
                      format: :json
 
@@ -98,24 +96,24 @@ describe AnswersController do
     context "author's answer" do
 
       it 'deletes authors answer from the database' do
-        expect { delete :destroy, id: authors_answer, question_id: question, format: :js }
+        expect { delete :destroy, id: authors_answer, format: :js }
             .to change(user.answers, :count).by(-1)
       end
 
       it 'renders index view' do
-        delete :destroy, id: authors_answer, question_id: question, format: :js
+        delete :destroy, id: authors_answer, format: :js
         expect(response).to render_template :destroy
       end
     end
 
     context "another user's answer" do
       it "does not delete another user's answer" do
-        expect { delete :destroy, id: another_users_answer, question_id: question, format: :js }
+        expect { delete :destroy, id: another_users_answer, format: :js }
             .to_not change(another_user.questions, :count)
       end
 
       it 'renders show view' do
-        delete :destroy, id: another_users_answer, question_id: question, format: :js
+        delete :destroy, id: another_users_answer, format: :js
         expect(response).to redirect_to root_path
       end
     end
@@ -126,9 +124,7 @@ describe AnswersController do
 
     context "if author's question" do
       before do
-        patch :set_the_best, id: another_users_answer,
-              question_id: question,
-              format: :js
+        patch :set_the_best, id: another_users_answer, format: :js
       end
 
       it 'sets the best answer' do
@@ -143,9 +139,7 @@ describe AnswersController do
 
     context "if another user's question" do
       before do
-        patch :set_the_best, id: another_question.answers.first,
-              question_id: another_question,
-              format: :js
+        patch :set_the_best, id: another_question.answers.first, format: :js
       end
 
       it 'does not set the best answer' do
@@ -170,7 +164,8 @@ describe AnswersController do
       it 'saves vote to the db' do
         patch :vote_up, vote_params
         voted_answer.reload
-        expect(voted_answer.votes.first.value).to eq 1
+        vote = voted_answer.votes.find_by(user: user)
+        expect(vote.value).to eq 1
       end
 
       it 'renders vote json template ' do
@@ -181,7 +176,7 @@ describe AnswersController do
 
     context 'when signed in as author' do
       before { sign_in(user) }
-      let(:params) {{ id: answer, question_id: question, format: :json }}
+      let(:params) {{ id: answer, format: :json }}
 
       it { expect{ patch :vote_up, params }.not_to change(answer.votes, :count) }
 
@@ -214,7 +209,8 @@ describe AnswersController do
       it 'saves vote to the db' do
         patch :vote_down, vote_params
         voted_answer.reload
-        expect(voted_answer.votes.first.value).to eq -1
+        vote = voted_answer.votes.find_by(user: user)
+        expect(vote.value).to eq -1
       end
 
       it 'renders vote json template ' do
@@ -226,7 +222,7 @@ describe AnswersController do
     context 'when signed in as author' do
       before { sign_in(user) }
 
-      let(:params) {{ id: answer, question_id: question, format: :json }}
+      let(:params) {{ id: answer, format: :json }}
 
       it { expect{ patch :vote_down, params }.not_to change(answer.votes, :count) }
 
