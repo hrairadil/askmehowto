@@ -9,7 +9,7 @@ class AnswersController < ApplicationController
     @answer = @question.answers.new(answer_params)
     @answer.user = current_user
     if @answer.save
-      render :submit
+      PrivatePub.publish_to "/questions/#{@question.id}/answers", answer: render(template: 'answers/submit')
     else
       render_errors
     end

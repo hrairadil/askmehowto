@@ -3,7 +3,9 @@
   p= @question.body
   p= render 'layouts/shared/votes', resource: @question
   = render 'layouts/shared/attachments_list', resource: @question
-.answers
+.answers data={ question_id: @question.id }
   = render 'answers/index'
 .create-answer
   = render 'answers/form'
+
+= subscribe_to "/questions/#{@question.id}/answers"

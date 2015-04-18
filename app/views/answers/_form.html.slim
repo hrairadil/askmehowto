@@ -1,5 +1,5 @@
 - if user_signed_in?
-  = nested_form_for [@question, @answer], remote: true, data: { type: :json }, html: { id: 'create-answer-form' } do |f|
+  = nested_form_for [@question, @answer], remote: true, html: { id: 'create-answer-form' } do |f|
     p
       .answer-errors
       = f.label :body, 'Your answer'
