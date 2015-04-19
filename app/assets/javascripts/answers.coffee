@@ -9,6 +9,9 @@ $ ->
     answer_id = $(this).data('answerId')
     $("form#edit-answer-#{answer_id}").show()
 
+  createAnswerSuccess = (e, xhr, status, error) ->
+    $('#create-answer-body').val('')
+
   createAnswerError = (e, xhr, status, error) ->
     $('.answer-errors').html('')
     errors = $.parseJSON(xhr.responseText)
@@ -30,6 +33,7 @@ $ ->
     $("#answer-#{resource.id} .votes").replaceWith(JST["templates/votes"]({resource: resource}))
 
   $(document).on 'click', '.edit-answer-link', editAnswer
+  $(document).on 'ajax:success', 'form.new_answer', createAnswerSuccess
   $(document).on 'ajax:error', 'form.new_answer', createAnswerError
   $(document).on 'ajax:success', 'form.edit_answer', editAnswerSuccess
   $(document).on 'ajax:error', 'form.edit_answer', editAnswerError
@@ -38,6 +42,5 @@ $ ->
   questionId = $('.answers').data('questionId')
   PrivatePub.subscribe "/questions/#{questionId}/answers", (data, channel) ->
     answer = $.parseJSON(data['answer'])
-    console.log(data)
     $('.answers').append(JST["templates/answer"]({answer: answer}))
-    $('#create-answer-body').val('')
+
