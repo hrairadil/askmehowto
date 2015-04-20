@@ -16,3 +16,7 @@ $ ->
     $(".question .votes").replaceWith(JST["templates/votes"]({resource: resource}))
 
   $(document).on 'ajax:success', '.question', updateVotes
+
+  PrivatePub.subscribe '/questions', (data, channel) ->
+    question = $.parseJSON(data['question'])
+    $('.questions').append(JST["templates/question"]({question: question}))

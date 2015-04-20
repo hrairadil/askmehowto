@@ -4,7 +4,6 @@
       .answer-errors
       = f.label :body, 'Your answer'
       = f.text_area :body, id: 'create-answer-body'
-    p Attachments:
-    p
-      = render 'layouts/shared/attachment_form', f: f
+
+    p= render 'layouts/shared/attachment_form', f: f
     p= f.submit 'Create answer'
