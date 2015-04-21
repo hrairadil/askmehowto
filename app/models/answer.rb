@@ -1,7 +1,10 @@
 class Answer < ActiveRecord::Base
   belongs_to :question
   belongs_to :user
+
   has_many :attachments, as: :attachable, dependent: :destroy
+  has_many :comments, as: :commentable, dependent: :destroy
+
   include Votable
 
   validates :body, presence: true

@@ -7,6 +7,7 @@ describe Question do
   it { should have_many(:answers).dependent(:destroy) }
   it { should have_many(:attachments).dependent(:destroy) }
   it { should have_many(:votes).dependent(:destroy) }
+  it { should have_many(:comments).dependent(:destroy) }
 
   it { should respond_to :user_id }
   it { should respond_to :title }
