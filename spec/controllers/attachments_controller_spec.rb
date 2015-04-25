@@ -22,9 +22,9 @@ describe AttachmentsController do
       expect(assigns(:attachment)).to eq attachment
     end
 
-    it 'assigns entity to @entity' do
+    it 'assigns attachable to @attachable' do
       delete :destroy, delete_params
-      expect(assigns(:entity)).to eq question
+      expect(assigns(:attachable)).to eq question
     end
 
     it "deletes author's attachment" do

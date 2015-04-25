@@ -22,6 +22,14 @@ feature 'Comment a question', %q{
         expect(page).to have_content 'New comment'
       end
     end
+
+    scenario 'tries to create an invalid comment', js: true do
+      within '.question' do
+        click_on 'Add comment'
+        click_on 'Submit'
+        expect(page).to have_content "Body can't be blank"
+      end
+    end
   end
 
   context 'Unauthenticated user' do

@@ -4,7 +4,7 @@ class AttachmentsController < ApplicationController
   before_action :set_entity
 
   def destroy
-    @attachment.destroy! if @entity.user == current_user
+    @attachment.destroy! if @attachable.user == current_user
   end
 
   private
@@ -12,8 +12,6 @@ class AttachmentsController < ApplicationController
       @attachment = Attachment.find(params[:id])
     end
     def set_entity
-      @entity = @attachment.attachable_type.constantize.find(@attachment.attachable_id)
-      @question = @entity if @entity.is_a? Question
-      @answer = @entity if @entity.is_a? Answer
+      @attachable = @attachment.attachable_type.constantize.find(@attachment.attachable_id)
     end
 end
