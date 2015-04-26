@@ -9,7 +9,7 @@ class AnswersController < ApplicationController
     @answer = @question.answers.new(answer_params)
     @answer.user = current_user
     if @answer.save
-      PrivatePub.publish_to "/questions/#{@question.id}/answers", answer: render(template: 'answers/submit')
+      PrivatePub.publish_to channel, answer: render(template: 'answers/submit')
     else
       render_errors
     end
@@ -46,6 +46,10 @@ class AnswersController < ApplicationController
 
     def authorize_user
       redirect_to root_path unless @answer.user == current_user
+    end
+
+    def channel
+      "/questions/#{@question.id}/answers"
     end
 
     def render_errors
