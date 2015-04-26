@@ -32,15 +32,19 @@ $ ->
     resource = $.parseJSON(xhr.responseText)
     $("#answer-#{resource.id} .votes").replaceWith(JST["templates/votes"]({resource: resource}))
 
+  subscribeToAnswers = ()->
+    questionId = $('.question').data('questionId')
+    channel = "/questions/#{questionId}/answers"
+    PrivatePub.subscribe channel, (data, channel) ->
+      answer = $.parseJSON(data['answer'])
+      $('.answers').append(JST["templates/answer"]({answer: answer}))
+
   $(document).on 'click', '.edit-answer-link', editAnswer
   $(document).on 'ajax:success', 'form.new_answer', createAnswerSuccess
   $(document).on 'ajax:error', 'form.new_answer', createAnswerError
   $(document).on 'ajax:success', 'form.edit_answer', editAnswerSuccess
   $(document).on 'ajax:error', 'form.edit_answer', editAnswerError
   $(document).on 'ajax:success', '.answers', updateVotes
+  $(document).ready subscribeToAnswers
 
-  questionId = $('.question').data('questionId')
-  PrivatePub.subscribe "/questions/#{questionId}/answers", (data, channel) ->
-    answer = $.parseJSON(data['answer'])
-    $('.answers').append(JST["templates/answer"]({answer: answer}))
 
