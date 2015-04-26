@@ -16,10 +16,12 @@ feature 'Comment a question', %q{
 
     scenario 'creates a comment', js: true do
       within '.question' do
+        expect(page).not_to have_field 'Your comment'
         click_on 'Add comment'
-        fill_in 'Body', with: 'New comment'
+        fill_in 'Your comment', with: 'New comment'
         click_on 'Submit'
         expect(page).to have_content 'New comment'
+        expect(page).to have_content user.email
       end
     end
 

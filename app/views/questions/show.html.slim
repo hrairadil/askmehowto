@@ -1,16 +1,17 @@
-.question
+.question data={ question_id: @question.id }
   h1= @question.title
   p= @question.body
   p= render 'layouts/shared/votes', resource: @question
-  = render 'layouts/shared/attachments_list', resource: @question
-  /.comments
-    = render 'comments/comments'
-  /.create-comments
-    = render 'comments/'
-.answers data={ question_id: @question.id }
-  = render 'answers/index'
+  P= render 'layouts/shared/attachments_list', resource: @question
+
+  p= render 'comments/index', resource: @question
+  p= render 'comments/form', resource: @question
+
+.answers
+  p= render 'answers/index'
+
 .create-answer
-  = render 'answers/form'
+  p= render 'answers/form'
 
 = subscribe_to "/questions/#{@question.id}/answers"
 = subscribe_to "/questions/#{@question.id}/comments"

@@ -39,7 +39,7 @@ $ ->
   $(document).on 'ajax:error', 'form.edit_answer', editAnswerError
   $(document).on 'ajax:success', '.answers', updateVotes
 
-  questionId = $('.answers').data('questionId')
+  questionId = $('.question').data('questionId')
   PrivatePub.subscribe "/questions/#{questionId}/answers", (data, channel) ->
     answer = $.parseJSON(data['answer'])
     $('.answers').append(JST["templates/answer"]({answer: answer}))
