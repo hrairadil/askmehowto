@@ -23,7 +23,7 @@ Rails.application.routes.draw do
     concerns :commentable, only: :create, defaults: { commentable: 'questions' }
 
     resources :answers, only: [:create, :update, :destroy], concerns: :votable, shallow: true do
-      #concerns :commentable, only: :create, defaults: { commentable: 'answers' }
+      concerns :commentable, only: :create, defaults: { commentable: 'answers' }
       member { patch :set_the_best }
     end
   end
