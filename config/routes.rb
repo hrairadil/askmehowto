@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  #get 'comments/create'
+
   devise_for :users
   root to: 'questions#index'
 
@@ -13,8 +15,15 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :questions, concerns: :votable do
+  concern :commentable do |options|
+    resources :comments, options
+  end
+
+  resources :questions, concerns: :votable  do
+    concerns :commentable, only: :create, defaults: { commentable: 'questions' }
+
     resources :answers, only: [:create, :update, :destroy], concerns: :votable, shallow: true do
+      concerns :commentable, only: :create, defaults: { commentable: 'answers' }
       member { patch :set_the_best }
     end
   end

@@ -22,6 +22,7 @@ class QuestionsController < ApplicationController
 
     if @question.save
       redirect_to @question, notice: 'Question has been successfully created!'
+      PrivatePub.publish_to '/questions', question: render_to_string(template: 'questions/submit.json.jbuilder')
     else
       flash.now[:alert] = 'Can not create your question! Parameters are invalid!'
       render :new
