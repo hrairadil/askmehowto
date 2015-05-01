@@ -3,24 +3,19 @@ class AnswersController < ApplicationController
   before_action :set_answer, only: [:update, :destroy, :set_the_best]
   before_action :set_question, only: [ :create, :update, :destroy, :set_the_best]
   before_action :authorize_user, only: [:update, :destroy]
+  after_action :publish_to_answers, only: :create
   include Voted
 
+  respond_to :js, except: :create
+  respond_to :json, only: [:create, :update]
+
   def create
-    @answer = @question.answers.new(answer_params)
-    @answer.user = current_user
-    if @answer.save
-      PrivatePub.publish_to channel, answer: render(template: 'answers/submit')
-    else
-      render_errors
-    end
+    respond_with(@answer = @question.answers.create(answer_params.merge(user: current_user)))
   end
 
   def update
-    if @answer.update(answer_params)
-      render :submit
-    else
-      render_errors
-    end
+    @answer.update(answer_params)
+    respond_with(@answer, template: 'answers/submit')
   end
 
   def destroy
@@ -48,11 +43,11 @@ class AnswersController < ApplicationController
       redirect_to root_path unless @answer.user == current_user
     end
 
-    def channel
-      "/questions/#{@question.id}/answers"
+    def publish_to_answers
+      PrivatePub.publish_to channel, answer: render_to_string(template: 'answers/submit') if @answer.valid?
     end
 
-    def render_errors
-      render json: @answer.errors.full_messages, status: :unprocessable_entity
+    def channel
+      "/questions/#{@question.id}/answers"
     end
 end

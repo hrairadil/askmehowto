@@ -16,8 +16,7 @@ $ ->
 
   createCommentError = (e, xhr, status, error) ->
     $('.create-comment-errors').html('')
-    errors = $.parseJSON(xhr.responseText)
-    console.log errors
+    errors = $.parseJSON(xhr.responseText).errors.body
     $.each errors, (index, value) ->
       $('.create-comment-errors').append(value)
 

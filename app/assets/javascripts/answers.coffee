@@ -14,7 +14,7 @@ $ ->
 
   createAnswerError = (e, xhr, status, error) ->
     $('.answer-errors').html('')
-    errors = $.parseJSON(xhr.responseText)
+    errors = $.parseJSON(xhr.responseText).errors.body
     $.each errors, (index, value) ->
       $('.answer-errors').append(value)
 
@@ -24,7 +24,7 @@ $ ->
 
   editAnswerError = (e, xhr, status, error) ->
     $('.edit-answer-errors').html('')
-    errors = $.parseJSON(xhr.responseText)
+    errors = $.parseJSON(xhr.responseText).errors.body
     $.each errors, (index, value) ->
       $('.edit-answer-errors').append(value)
 

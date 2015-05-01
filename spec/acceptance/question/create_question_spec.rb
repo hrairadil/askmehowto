@@ -16,7 +16,7 @@ feature 'Create question', %q{
     fill_in 'Title', with: 'Test Title'
     fill_in 'Body', with: 'Test Body'
     click_on 'Create'
-    expect(page).to have_content 'Question has been successfully created!'
+    expect(page).to have_content 'Question was successfully created'
     expect(page).to have_content 'Test Title'
     expect(page).to have_content 'Test Body'
   end
@@ -29,7 +29,7 @@ feature 'Create question', %q{
     fill_in 'Title', with: ' '
     fill_in 'Body', with: ' '
     click_on 'Create'
-    expect(page).to have_content 'Can not create your question! Parameters are invalid!'
+    expect(page).to have_content 'Question could not be created'
   end
 
   scenario 'Unauthenticated user tries to create a question' do
