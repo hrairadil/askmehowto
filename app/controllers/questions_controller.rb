@@ -27,13 +27,7 @@ class QuestionsController < ApplicationController
   end
 
   def create
-    @question = current_user.questions.new(question_params)
-    if @question.save
-      flash[:notice] = 'Question has been successfully created!'
-    else
-      flash[:alert] = 'Can not create your question! Parameters are invalid!'
-    end
-    respond_with @question
+    respond_with(@question = current_user.questions.create(question_params))
   end
 
   def update

@@ -24,7 +24,7 @@ feature 'User tries to create an answer to the question', %q{
     visit question_path(question)
     click_on 'Create answer'
 
-    expect(page).to have_content "Body can't be blank"
+    expect(page).to have_content "can't be blank"
   end
 
   scenario 'Unauthenticated user can not create an answer' do
