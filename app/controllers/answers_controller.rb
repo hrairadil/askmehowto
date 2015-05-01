@@ -50,8 +50,4 @@ class AnswersController < ApplicationController
     def channel
       "/questions/#{@question.id}/answers"
     end
-
-    def render_errors
-      render json: @answer.errors.full_messages, status: :unprocessable_entity
-    end
 end

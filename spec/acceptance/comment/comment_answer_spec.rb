@@ -30,7 +30,7 @@ feature 'Comment an answer', %q{
       within "#answer-#{answer.id}" do
         click_on 'Add comment'
         click_on 'Submit'
-        expect(page).to have_content "Body can't be blank"
+        expect(page).to have_content "can't be blank"
       end
     end
   end
