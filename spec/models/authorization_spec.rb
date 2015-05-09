@@ -1,5 +1,7 @@
 require 'rails_helper'
+require 'shoulda-matchers'
 
-RSpec.describe Authorization, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+describe Authorization do
+  it { should respond_to :provider }
+  it { should respond_to :uid }
 end

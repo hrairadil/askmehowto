@@ -1,9 +1,12 @@
 Rails.application.routes.draw do
-
-  #get 'comments/create'
+  root to: 'questions#index'
 
   devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
-  root to: 'questions#index'
+  resources :users, only: [:edit] do
+    member do
+      patch :update_email
+    end
+  end
 
   resources :attachments, only: [:destroy]
 
