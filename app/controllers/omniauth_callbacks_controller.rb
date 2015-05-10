@@ -1,7 +1,5 @@
 class OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  before_action :set_user, only: [:facebook, :twitter]
-  before_action :provider_sign_in, only: [:facebook, :twitter]
-
+  before_action :provider_sign_in, only: [:facebook, :twitter, :finish_sign_up]
 
   def facebook
   end
@@ -9,18 +7,23 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def twitter
   end
 
+  def finish_sign_up
+  end
+
   private
-    def set_user
-      @user = User.find_for_oauth(request.env['omniauth.auth'])
+    def provider_sign_in
+      @user = User.find_for_oauth(auth)
+      if @user && @user.persisted?
+        sign_in_and_redirect @user, event: :authentication
+        set_flash_message(:notice, :success, kind: auth.provider.capitalize) if is_navigational_format?
+      else
+        flash[:notice] = 'Email is required to compete sign up'
+        render 'omniauth_callbacks/prompt_email', locals: { auth: auth }
+      end
     end
 
-    def provider_sign_in
-      if @user.persisted? && @user.email_verified?
-        sign_in_and_redirect @user, event: :authentication
-        set_flash_message(:notice, :success, kind: action_name.capitalize) if is_navigational_format?
-      else
-        redirect_to edit_user_path @user
-      end
+    def auth
+      request.env['omniauth.auth'] || OmniAuth::AuthHash.new(params[:auth])
     end
 end
 

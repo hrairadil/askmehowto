@@ -2,10 +2,8 @@ Rails.application.routes.draw do
   root to: 'questions#index'
 
   devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
-  resources :users, only: [:edit] do
-    member do
-      patch :update_email
-    end
+  devise_scope :user do
+    post '/finish_sign_up' => 'omniauth_callbacks#finish_sign_up'
   end
 
   resources :attachments, only: [:destroy]

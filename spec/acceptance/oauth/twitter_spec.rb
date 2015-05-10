@@ -18,20 +18,14 @@ feature 'Sign in with twitter', %q{
     before { click_on 'Sign in with Twitter' }
 
     scenario 'successfuly' do
-      fill_in 'Email', with: 'test@test.com'
+      fill_in 'auth_info_email', with: 'test@test.com'
       click_on 'Submit'
-      expect(page).to have_content 'Signed in successfully'
-    end
-
-    scenario 'without email' do
-      fill_in 'Email', with: ''
-      click_on 'Submit'
-      expect(page).to have_content 'Email can\'t be blank'
+      expect(page).to have_content 'Successfully authenticated from Twitter account'
     end
 
     scenario 'when it has not been updated' do
       click_on 'Submit'
-      expect(page).to have_content 'Email is invalid'
+      expect(page).to have_content 'Email is required to compete sign up'
     end
   end
 

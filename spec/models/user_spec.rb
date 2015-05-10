@@ -75,26 +75,8 @@ RSpec.describe User do
       let(:auth) { OmniAuth::AuthHash.new(provider: 'twitter', uid: '123456') }
 
       it 'creates new user' do
-        expect { User.find_for_oauth(auth) }.to change(User, :count).by(1)
+        expect(User.find_for_oauth(auth)).to be false
       end
-
-      it 'saves temporary email' do
-
-        expect(User.find_for_oauth(auth).email).to eq 'change-my-email-123456@twitter.tst'
-      end
-    end
-
-    context 'email verified' do
-      let(:unverified_user) { create :user, email: 'change-my-email-1234@jlkj.tst'}
-      let(:verified_user) { create :user, email: 'verified@email.com'}
-
-      it 'does not verify' do
-        expect(unverified_user.email_verified?).to be false
-      end
-
-      it 'verifies' do
-        expect(verified_user.email_verified?).to be true
-     end
     end
   end
 end
