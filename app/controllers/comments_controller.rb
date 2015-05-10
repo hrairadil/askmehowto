@@ -3,6 +3,8 @@ class CommentsController < ApplicationController
   before_action :set_commentable, only: :create
   after_action :publish_to_comments, only: :create
 
+  authorize_resource
+
   respond_to :json, :js
 
   def create

@@ -5,6 +5,7 @@ class AnswersController < ApplicationController
   before_action :authorize_user, only: [:update, :destroy]
   after_action :publish_to_answers, only: :create
   include Voted
+  authorize_resource
 
   respond_to :js, except: :create
   respond_to :json, only: [:create, :update]

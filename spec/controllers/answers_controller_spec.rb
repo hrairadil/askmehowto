@@ -148,7 +148,7 @@ describe AnswersController do
       end
 
       it 'renders set_the_best template' do
-        expect(response).to render_template :set_the_best
+        expect(response).to redirect_to root_path
       end
     end
   end
@@ -188,7 +188,7 @@ describe AnswersController do
 
       it 'renders status forbidden' do
         patch :vote_up, params
-        expect(response).to be_forbidden
+        expect(response).to redirect_to root_path
       end
     end
 
@@ -240,7 +240,7 @@ describe AnswersController do
 
       it 'renders status forbidden' do
         patch :vote_up, id: answer, format: :json
-        expect(response).to be_forbidden
+        expect(response).to redirect_to root_path
       end
     end
 

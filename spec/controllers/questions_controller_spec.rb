@@ -197,7 +197,7 @@ describe QuestionsController do
 
       it 'renders status forbidden' do
         patch :vote_up, params
-        expect(response).to be_forbidden
+        expect(response).to redirect_to root_path
       end
     end
 
@@ -248,7 +248,7 @@ describe QuestionsController do
 
       it 'renders status forbidden' do
         patch :vote_up, params
-        expect(response).to be_forbidden
+        expect(response).to redirect_to root_path
       end
     end
 
