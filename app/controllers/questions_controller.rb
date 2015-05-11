@@ -2,10 +2,11 @@ class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :set_question, only: [:show, :update, :destroy]
   before_action :set_questions, only: [:index, :update, :destroy]
-  before_action :authorize_user, only: [:update, :destroy]
   after_action :publish, only: :create
 
   include Voted
+
+  authorize_resource
 
   respond_to :html, :js
   respond_to :json, only: :create
@@ -51,10 +52,6 @@ class QuestionsController < ApplicationController
 
     def question_params
       params.require(:question).permit(:title, :body, attachments_attributes: [:id, :file, :_destroy])
-    end
-
-    def authorize_user
-      redirect_to root_path unless @question.user == current_user
     end
 
     def publish
