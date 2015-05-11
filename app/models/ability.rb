@@ -27,19 +27,19 @@ class Ability
 
     can :destroy, [Question, Answer, Comment], user: user
     can :destroy, Attachment do |attachment|
-      attachment.attachable.user == user
+      attachment.attachable.user_id == user.id
     end
 
     can [:vote_up, :vote_down], [Answer, Question] do |resource|
-      (resource.user != user) && !resource.voted_by?(user)
+      (resource.user_id != user.id) && !resource.voted_by?(user)
     end
 
     can :unvote, [Answer, Question] do |resource|
-      (resource.user != user) && resource.voted_by?(user)
+      (resource.user_id != user.id) && resource.voted_by?(user)
     end
 
     can :set_the_best, Answer do |answer|
-      answer.question.user == user
+      answer.question.user_id == user.id
     end
   end
 end
