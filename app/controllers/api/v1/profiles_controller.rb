@@ -4,6 +4,10 @@ class Api::V1::ProfilesController < ApplicationController
 
   respond_to :json
 
+  def index
+    respond_with User.all_except(current_resource_owner)
+  end
+
   def me
     respond_with current_resource_owner
   end
