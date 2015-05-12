@@ -63,7 +63,7 @@ describe 'Profile APT' do
       end
 
       it 'contains a list of users without me' do
-        expect(response.body).to be_json_eql(users.to_json)
+        expect(response.body).to be_json_eql(users.to_json).at_path('profiles')
         expect(response.body).not_to include_json(me.to_json)
       end
     end
