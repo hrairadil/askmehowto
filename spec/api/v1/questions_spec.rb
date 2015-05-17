@@ -3,7 +3,6 @@ require 'rails_helper'
 describe 'Questions API' do
   let(:access_token) { create :access_token }
   let!(:questions) { create_list :question, 2 }
-  let(:question) { questions.first }
 
   describe 'GET /index' do
     context 'unauthorized' do
@@ -19,6 +18,7 @@ describe 'Questions API' do
     end
 
     context 'authorized' do
+      let(:question) { questions.first }
       let!(:answer) { create :answer, question: question }
 
       before { get '/api/v1/questions',
@@ -50,7 +50,7 @@ describe 'Questions API' do
           expect(response.body).to have_json_size(1).at_path('questions/0/answers')
         end
 
-        %w(id body created_at updated_at).each do |attr|
+        %w(id body created_at updated_at user_id best).each do |attr|
           it "contains #{attr}" do
             expect(response.body)
                 .to be_json_eql(answer.send(attr.to_sym).to_json)
@@ -62,6 +62,13 @@ describe 'Questions API' do
   end
 
   describe 'GET /show' do
+    let(:question) { create :question }
+    let(:answer) { create :answer, question: question }
+    let!(:comments) { create_list :comment, 2, commentable: question }
+    let!(:comment) { comments.first }
+    let!(:attachments) { create_list :attachment, 2, attachable: question }
+    let(:attachment) { attachments.first }
+
     before { get "/api/v1/questions/#{question.id}",
                  format: :json,
                  access_token: access_token.token }
@@ -88,5 +95,25 @@ describe 'Questions API' do
                                      .at_path("question/#{attr}")
       end
     end
+
+    context 'comment' do
+      it 'belongs to question' do
+        expect(response.body).to have_json_size(2).at_path('question/comments')
+      end
+
+      %w(id body commentable_id commentable_type user_id created_at updated_at).each do |attr|
+        it "contain #{attr}" do
+          expect(response.body).to be_json_eql(comment.send(attr.to_sym).to_json)
+                                       .at_path("question/comments/0/#{attr}")
+        end
+      end
+    end
+
+    it 'contains attachments' do
+      expect(response.body).to have_json_size(2).at_path('question/attachments')
+      expect(response.body).to be_json_eql(attachment.file.url.to_json)
+                                   .at_path('question/attachments/1/url')
+    end
+
   end
 end
