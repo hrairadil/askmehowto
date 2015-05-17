@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 describe 'Questions API' do
-  let(:access_token) { create :access_token }
+  let(:user) { create :user }
+  let(:access_token) { create :access_token, resource_owner_id: user.id }
   let!(:questions) { create_list :question, 2 }
 
   describe 'GET /index' do
@@ -115,6 +116,44 @@ describe 'Questions API' do
           expect(response.body).to be_json_eql(attachment.file.url.to_json)
                                      .at_path('question/attachments/0/url')
         end
+      end
+    end
+  end
+
+  describe 'POST /create' do
+    context 'unauthorized' do
+      it 'returns 401 status if there is no access_token' do
+        post '/api/v1/questions/',
+             question: attributes_for(:question),
+             format: :json
+        expect(response.status).to eq 401
+      end
+
+      it 'returns 401 status if access_token is invalid' do
+        post '/api/v1/questions/',
+             question: attributes_for(:question),
+             format: :json,
+             access_token: '1234'
+        expect(response.status).to eq 401
+      end
+    end
+
+    context 'authorized' do
+      let(:post_attributes) {
+        {
+          question: attributes_for(:question),
+          format: :json,
+          access_token: access_token.token
+        }
+      }
+
+      it 'returns 201 status code' do
+        post '/api/v1/questions/', post_attributes
+        expect(response.status).to eq 201
+      end
+
+      it 'saves a question to the db' do
+        expect{ post '/api/v1/questions/', post_attributes }.to change(Question, :count).by(1)
       end
     end
   end
