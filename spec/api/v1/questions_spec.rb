@@ -64,14 +64,8 @@ describe 'Questions API' do
   describe 'GET /show' do
     let(:question) { create :question }
     let(:answer) { create :answer, question: question }
-    let!(:comments) { create_list :comment, 2, commentable: question }
-    let!(:comment) { comments.first }
-    let!(:attachments) { create_list :attachment, 2, attachable: question }
-    let(:attachment) { attachments.first }
-
-    before { get "/api/v1/questions/#{question.id}",
-                 format: :json,
-                 access_token: access_token.token }
+    let!(:comment) { create :comment, commentable: question }
+    let!(:attachment) { create :attachment, attachable: question }
 
     context 'unauthorized' do
       it 'returns 401 status if there is no access_token' do
@@ -85,35 +79,43 @@ describe 'Questions API' do
       end
     end
 
-    it 'returns 200 status' do
-      expect(response).to be_success
-    end
+    context 'authorized' do
 
-    %w(id title body created_at updated_at).each do |attr|
-      it "question object contains #{attr}" do
-        expect(response.body).to be_json_eql(question.send(attr.to_sym).to_json)
-                                     .at_path("question/#{attr}")
-      end
-    end
+      before { get "/api/v1/questions/#{question.id}",
+                   format: :json,
+                   access_token: access_token.token }
 
-    context 'comment' do
-      it 'belongs to question' do
-        expect(response.body).to have_json_size(2).at_path('question/comments')
+      it 'returns 200 status' do
+        expect(response).to be_success
       end
 
-      %w(id body commentable_id commentable_type user_id created_at updated_at).each do |attr|
-        it "contain #{attr}" do
-          expect(response.body).to be_json_eql(comment.send(attr.to_sym).to_json)
-                                       .at_path("question/comments/0/#{attr}")
+      %w(id title body created_at updated_at).each do |attr|
+        it "question object contains #{attr}" do
+          expect(response.body).to be_json_eql(question.send(attr.to_sym).to_json)
+                                       .at_path("question/#{attr}")
+        end
+      end
+
+      context 'comment' do
+        it 'belongs to question' do
+          expect(response.body).to have_json_size(1).at_path('question/comments')
+        end
+
+        %w(id body commentable_id commentable_type user_id created_at updated_at).each do |attr|
+          it "contain #{attr}" do
+            expect(response.body).to be_json_eql(comment.send(attr.to_sym).to_json)
+                                         .at_path("question/comments/0/#{attr}")
+          end
+        end
+      end
+
+      context 'attachment' do
+        it 'belongs to question' do
+          expect(response.body).to have_json_size(1).at_path('question/attachments')
+          expect(response.body).to be_json_eql(attachment.file.url.to_json)
+                                     .at_path('question/attachments/0/url')
         end
       end
     end
-
-    it 'contains attachments' do
-      expect(response.body).to have_json_size(2).at_path('question/attachments')
-      expect(response.body).to be_json_eql(attachment.file.url.to_json)
-                                   .at_path('question/attachments/1/url')
-    end
-
   end
 end
