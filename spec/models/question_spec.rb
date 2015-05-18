@@ -2,7 +2,6 @@ require 'rails_helper'
 require 'shoulda-matchers'
 
 describe Question do
-  let(:question) { create :question }
   it { should belong_to :user }
   it { should have_many(:answers).dependent(:destroy) }
   it { should have_many(:attachments).dependent(:destroy) }
