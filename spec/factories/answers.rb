@@ -18,6 +18,16 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_comments do
+      transient do
+        number_of_comments 1
+      end
+
+      after(:create) do |answer, evaluator|
+        create_list(:comment, evaluator.number_of_attachments, commentable: answer)
+      end
+    end
+
     trait :with_votes do
       transient do
         number_of_votes 1
