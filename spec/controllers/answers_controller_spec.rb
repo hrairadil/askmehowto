@@ -22,39 +22,48 @@ describe AnswersController do
   it_behaves_like 'votable'
 
   describe 'POST #create' do
+    let(:channel) { "/questions/#{question.id}/answers" }
     before { sign_in(user) }
 
     context 'when valid attributes' do
-      let(:create_params) {{ answer: attributes_for(:answer),
+      let(:params) {{ answer: attributes_for(:answer),
                              question_id: question,
                              user_id: user,
                              format: :json }}
 
       it 'saves a new answer to the database' do
-        expect { post :create, create_params }.to change(question.answers, :count).by(1)
+        expect { do_request }.to change(question.answers, :count).by(1)
       end
 
       it 'renders create template' do
-        post :create, create_params
+        do_request
         expect(response).to render_template :submit
       end
+
+      it_behaves_like 'publishable'
     end
 
     context 'when invalid attributes' do
-      let(:wrong_create_params){{ answer: attributes_for(:answer, :with_wrong_attributes),
-                                  question_id: question,
-                                  user_id: user,
-                                  format: :json }}
+      let(:params){{ answer: attributes_for(:answer, :with_wrong_attributes),
+                            question_id: question,
+                            user_id: user,
+                            format: :json }}
 
       it 'does not save a new answer to the database' do
-        expect { post :create, wrong_create_params }
+        expect { do_request }
             .to_not change(Answer, :count)
       end
 
       it 'renders create template' do
-        post :create, wrong_create_params
+        do_request
         expect(response.status).to eq 422
       end
+
+      it_behaves_like 'not publishable'
+    end
+
+    def do_request
+      post :create, params
     end
   end
 

@@ -67,30 +67,40 @@ describe QuestionsController do
   end
 
   describe 'POST #create' do
+    let(:channel) { '/questions' }
+    let(:params) {{ question: attributes_for(:question) }}
+
     before { sign_in(user) }
 
     context 'with valid attributes' do
       it 'saves a new question to the database' do
-        expect { post :create, question: attributes_for(:question) }
-                               .to change(user.questions, :count).by(1)
+        expect { do_request }.to change(user.questions, :count).by(1)
       end
 
       it 'redirects to show view' do
-        post :create, question: attributes_for(:question)
+        do_request
         expect(response).to redirect_to question_path(assigns(:question))
       end
+
+      it_behaves_like 'publishable'
     end
 
     context 'with invalid attributes' do
+      let(:params) {{ question: attributes_for(:question, :with_wrong_attributes) }}
       it 'does not save question to the database' do
-        expect { post :create, question: attributes_for(:question, :with_wrong_attributes) }
-            .to_not change(user.questions, :count)
+        expect { do_request }.to_not change(user.questions, :count)
       end
 
       it 'renders new view' do
-        post :create, question: attributes_for(:question, :with_wrong_attributes)
+        do_request
         expect(response).to render_template :new
       end
+
+      it_behaves_like 'not publishable'
+    end
+
+    def do_request
+      post :create, params
     end
   end
 
