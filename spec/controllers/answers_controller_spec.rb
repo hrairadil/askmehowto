@@ -9,45 +9,61 @@ describe AnswersController do
   let!(:authors_answer) { create :answer, question: question, user: user }
   let!(:another_users_answer) { create :answer, question: question, user: another_user }
   let(:voted_answer) { another_question.answers.take }
-  let!(:vote_params) {{ id: voted_answer,
-                       question_id: another_question,
-                       format: :json}}
 
+  let(:resource) { answer }
+  let(:another_resource) { voted_answer }
+  let(:params) {{ id: resource,
+                  question_id: question,
+                  format: :json }}
+  let(:another_params) {{ id: another_resource,
+                          question_id: another_question,
+                          format: :json}}
+
+  it_behaves_like 'votable'
 
   describe 'POST #create' do
+    let(:channel) { "/questions/#{question.id}/answers" }
     before { sign_in(user) }
 
     context 'when valid attributes' do
-      let(:create_params) {{ answer: attributes_for(:answer),
+      let(:params) {{ answer: attributes_for(:answer),
                              question_id: question,
                              user_id: user,
                              format: :json }}
 
       it 'saves a new answer to the database' do
-        expect { post :create, create_params }.to change(question.answers, :count).by(1)
+        expect { do_request }.to change(question.answers, :count).by(1)
       end
 
       it 'renders create template' do
-        post :create, create_params
+        do_request
         expect(response).to render_template :submit
       end
+
+      it_behaves_like 'publishable'
     end
 
     context 'when invalid attributes' do
-      let(:wrong_create_params){{ answer: attributes_for(:answer, :with_wrong_attributes),
-                                  question_id: question,
-                                  user_id: user,
-                                  format: :json }}
+      let(:params){{ answer: attributes_for(:answer, :with_wrong_attributes),
+                            question_id: question,
+                            user_id: user,
+                            format: :json }}
 
       it 'does not save a new answer to the database' do
-        expect { post :create, wrong_create_params }
+        expect { do_request }
             .to_not change(Answer, :count)
       end
 
       it 'renders create template' do
-        post :create, wrong_create_params
+        do_request
         expect(response.status).to eq 422
       end
+
+      it_behaves_like 'not publishable'
+    end
+
+    def do_request
+      post :create, params
     end
   end
 
@@ -149,145 +165,6 @@ describe AnswersController do
 
       it 'renders set_the_best template' do
         expect(response).to redirect_to root_path
-      end
-    end
-  end
-
-  describe 'PATCH #vote_up' do
-    context 'User' do
-      before { sign_in(user) }
-
-      it 'votes up for answer' do
-        expect{ patch :vote_up, vote_params }.to change(voted_answer.votes, :count).by(1)
-      end
-
-      it 'saves vote to the db' do
-        patch :vote_up, vote_params
-        vote = voted_answer.votes.find_by(user: user)
-        expect(vote.value).to eq 1
-      end
-
-      it 'renders vote json template ' do
-        patch :vote_up, vote_params
-        expect(response).to render_template :vote
-      end
-
-      it 'denies voting second time' do
-        patch :vote_up, vote_params
-        patch :vote_down, vote_params
-        vote = voted_answer.votes.find_by(user: user)
-        expect(vote.value).to eq 1
-      end
-    end
-
-    context 'Author' do
-      before { sign_in(user) }
-      let(:params) {{ id: answer, format: :json }}
-
-      it { expect{ patch :vote_up, params }.not_to change(answer.votes, :count) }
-
-      it 'renders status forbidden' do
-        patch :vote_up, params
-        expect(response).to redirect_to root_path
-      end
-    end
-
-    context 'Guest' do
-      it 'votes for answer' do
-        expect{ patch :vote_up, vote_params }.not_to change(voted_answer.votes, :count)
-      end
-
-      it 'renders vote json template ' do
-        patch :vote_up, vote_params
-        expect(response).to be_unauthorized
-      end
-    end
-  end
-
-  describe 'PATCH #vote_down' do
-    context 'User' do
-      before { sign_in(user) }
-
-      it 'votes up for answer' do
-        expect{ patch :vote_down, vote_params }.to change(voted_answer.votes, :count).by(1)
-      end
-
-      it 'saves vote to the db' do
-        patch :vote_down, vote_params
-        voted_answer.reload
-        vote = voted_answer.votes.find_by(user: user)
-        expect(vote.value).to eq -1
-      end
-
-      it 'denies voting second time' do
-        patch :vote_down, vote_params
-        patch :vote_up, vote_params
-        vote = voted_answer.votes.find_by(user: user)
-        expect(vote.value).to eq -1
-      end
-
-      it 'renders vote json template ' do
-        patch :vote_down, vote_params
-        expect(response).to render_template :vote
-      end
-    end
-
-    context 'Author' do
-      before { sign_in(user) }
-
-      it { expect{ patch :vote_down, id: answer, format: :json }
-               .not_to change(answer.votes, :count) }
-
-      it 'renders status forbidden' do
-        patch :vote_up, id: answer, format: :json
-        expect(response).to redirect_to root_path
-      end
-    end
-
-    context 'Guest' do
-      it 'votes for answer' do
-        expect{ patch :vote_down, vote_params }.not_to change(voted_answer.votes, :count)
-      end
-
-      it 'renders status unauthorized' do
-        patch :vote_down, vote_params
-        expect(response).to be_unauthorized
-      end
-    end
-  end
-
-  describe 'PATCH #unvote' do
-    context 'User' do
-      before do
-        sign_in(user)
-        patch :vote_up, vote_params
-      end
-
-      it { expect{ patch :unvote, vote_params }
-               .to change(voted_answer.votes, :count).by(-1) }
-
-      it 'renders vote json template' do
-        patch :unvote, vote_params
-        expect(response).to render_template :vote
-      end
-    end
-
-    context 'Author' do
-      before { sign_in(user) }
-
-      it 'can not unvote' do
-        expect{ patch :unvote, id: answer, format: :json}.not_to change(answer.votes, :count)
-      end
-    end
-
-    context 'Guest' do
-      it 'can not unvote' do
-        expect{ patch :unvote, vote_params }.not_to change(voted_answer.votes, :count)
-      end
-
-      it 'renders status unauthorized' do
-        patch :unvote, id: answer, format: :json
-        expect(response).to be_unauthorized
       end
     end
   end
