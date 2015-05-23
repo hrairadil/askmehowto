@@ -12,23 +12,20 @@ describe 'Questions API' do
     context 'authorized' do
       let(:question) { questions.first }
       let!(:answer) { create :answer, question: question }
+      let(:resource) { question }
+      let(:attributes) { %w(id title body created_at updated_at) }
+      let(:path) { 'questions/0'}
+      let(:size) { 2 }
 
       before { get '/api/v1/questions',
                    format: :json,
                    access_token: access_token.token }
 
       it_behaves_like 'successful request'
+      it_behaves_like 'api resource with attributes'
 
       it 'returns list of questions' do
         expect(response.body).to have_json_size(2).at_path('questions')
-      end
-
-      %w(id title body created_at updated_at).each do |attr|
-        it "contains #{attr}" do
-          expect(response.body)
-              .to be_json_eql(question.send(attr.to_sym).to_json)
-                      .at_path("questions/0/#{attr}")
-        end
       end
 
       it 'question object contains short_title' do
@@ -36,17 +33,16 @@ describe 'Questions API' do
       end
 
       context 'answers' do
+        let(:resource) { answer }
+        let(:attributes) { %w(id body created_at updated_at user_id best) }
+        let(:path) { 'questions/0/answers/0'}
+        let(:size) { 1 }
+
         it 'included in question object' do
           expect(response.body).to have_json_size(1).at_path('questions/0/answers')
         end
 
-        %w(id body created_at updated_at user_id best).each do |attr|
-          it "contains #{attr}" do
-            expect(response.body)
-                .to be_json_eql(answer.send(attr.to_sym).to_json)
-                        .at_path("questions/0/answers/0/#{attr}")
-          end
-        end
+        it_behaves_like 'api resource with attributes'
       end
     end
 
