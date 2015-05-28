@@ -13,6 +13,8 @@ class Question < ActiveRecord::Base
   validates :body, presence: true
   validates :user_id, presence: true
 
+  scope :created_yesterday, -> { where(created_at: Time.zone.now.yesterday.all_day) }
+
   private
 
   def update_reputation
