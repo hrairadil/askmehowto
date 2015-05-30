@@ -13,6 +13,7 @@ class Answer < ActiveRecord::Base
   default_scope -> { order(best: :desc).order(created_at: :asc) }
 
   after_create :calculate_rating
+  after_create :notify_author
 
   def set_the_best
     Answer.transaction do
@@ -24,5 +25,9 @@ class Answer < ActiveRecord::Base
   private
     def calculate_rating
       Reputation.delay.calculate(self)
+    end
+
+    def notify_author
+      AuthorMailer.new_answer(question.user, self).deliver_later
     end
 end

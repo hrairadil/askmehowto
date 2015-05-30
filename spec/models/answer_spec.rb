@@ -61,4 +61,12 @@ describe Answer do
       subject.update(body: '1234')
     end
   end
+
+  context 'when create' do
+    it 'emails to question\'s author' do
+      expect(AuthorMailer).to receive(:new_answer)
+                                  .with(question.user, anything).and_call_original.exactly(2).times
+      create(:answer, question: question)
+    end
+  end
 end
