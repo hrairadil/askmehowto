@@ -9,6 +9,8 @@ describe Question do
   it { should have_many(:attachments).dependent(:destroy) }
   it { should have_many(:votes).dependent(:destroy) }
   it { should have_many(:comments).dependent(:destroy) }
+  it { should have_many(:subscriptions).dependent(:delete_all) }
+  it { should have_many(:subscribers) }
 
   it { should respond_to :user_id }
   it { should respond_to :title }

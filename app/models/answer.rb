@@ -14,6 +14,7 @@ class Answer < ActiveRecord::Base
 
   after_create :calculate_rating
   after_create :notify_author
+  after_create :notify_subscribers
 
   def set_the_best
     Answer.transaction do
@@ -29,5 +30,11 @@ class Answer < ActiveRecord::Base
 
     def notify_author
       AuthorMailer.new_answer(question.user, self).deliver_later
+    end
+
+    def notify_subscribers
+      question.subscribers.each do |subscriber|
+        SubscriptionMailer.new_answer(subscriber, self).deliver_later
+      end
     end
 end

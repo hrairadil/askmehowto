@@ -2,6 +2,7 @@ class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :set_question, only: [:show, :update, :destroy]
   before_action :set_questions, only: [:index, :update, :destroy]
+  before_action :set_subscription, only: :show
   after_action :publish, only: :create
 
   include Voted
@@ -52,6 +53,10 @@ class QuestionsController < ApplicationController
 
     def question_params
       params.require(:question).permit(:title, :body, attachments_attributes: [:id, :file, :_destroy])
+    end
+
+    def set_subscription
+      @subscription = @question.subscriptions.find_by(user: current_user) || Subscription.create
     end
 
     def publish

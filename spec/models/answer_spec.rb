@@ -63,9 +63,16 @@ describe Answer do
   end
 
   context 'when create' do
+    let(:subscriber) { create :user }
     it 'emails to question\'s author' do
       expect(AuthorMailer).to receive(:new_answer)
                                   .with(question.user, anything).and_call_original.exactly(2).times
+      create(:answer, question: question)
+    end
+
+    it 'emails to subscribers' do
+      question.subscribers << subscriber
+      expect(SubscriptionMailer).to receive(:new_answer).with(subscriber, anything).exactly(2).and_call_original
       create(:answer, question: question)
     end
   end
