@@ -21,7 +21,7 @@ describe Ability do
 
   describe 'for user' do
     let(:user) { create :user }
-    let(:question) { create :question, user: user }
+    let!(:question) { create :question, user: user }
     let(:answer) { create :answer, user: user, question: question }
     let(:attachment) { create :attachment, attachable: question }
     let(:subscription) { create :subscription, user: user, question: question }
@@ -34,6 +34,11 @@ describe Ability do
     let(:another_attachment) { create :attachment, attachable: another_question }
     let(:another_subscription) { create :subscription, user: another_user, question: another_question }
 
+    let(:subscription_to_unsubscribed_question) { build(:subscription, user: user, question: create(:question)) }
+    let(:subscription_to_subscribed_question) { build(:subscription, user: user, question: create(:subscription, user: user).question) }
+
+    let(:own_subscription_to_question) { create(:subscription, user: user) }
+    let(:other_subscription_to_question) { create(:subscription) }
 
     it { should_not be_able_to :manage, :all }
     it { should be_able_to :read, :all }
@@ -42,6 +47,12 @@ describe Ability do
     it { should be_able_to :create, Answer }
     it { should be_able_to :create, Comment }
     it { should be_able_to :create, Subscription }
+
+    it { should be_able_to :create, subscription_to_unsubscribed_question }
+    it { should_not be_able_to :create, subscription_to_subscribed_question }
+
+    it { should be_able_to :destroy, own_subscription_to_question }
+    it { should_not be_able_to :destroy, other_subscription_to_question }
 
     it { should be_able_to :update, question, user: user }
     it { should_not be_able_to :update, another_question, user: user }

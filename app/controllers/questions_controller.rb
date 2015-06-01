@@ -56,7 +56,7 @@ class QuestionsController < ApplicationController
     end
 
     def set_subscription
-      @subscription = @question.subscriptions.find_by(user: current_user) || Subscription.create
+      @subscription = @question.subscriptions.find_by(user: current_user) || Subscription.new
     end
 
     def publish
