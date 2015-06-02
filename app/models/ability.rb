@@ -22,9 +22,9 @@ class Ability
 
   def user_abilities
     guest_abilities
-    can :create, [Question, Answer, Comment]
-    can :create, Subscription do |subscription|
-      !subscription.question.followed_by(user)
+    can :create, [Question, Answer, Comment, Subscription]
+    can :subscribe_to, [Question] do |question|
+      !question.followed_by(user).present?
     end
     can :update, [Question, Answer], user: user
 

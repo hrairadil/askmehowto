@@ -4,10 +4,10 @@ class SubscriptionsController < ApplicationController
   before_action :set_subscription, only: :destroy
 
   authorize_resource
-
   respond_to :js
 
   def create
+    authorize! :subscribe_to, @question
     respond_with(@subscription = @question.subscriptions.create(user: current_user))
   end
 
