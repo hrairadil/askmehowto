@@ -2,10 +2,10 @@ require 'rails_helper'
 require 'shoulda-matchers'
 
 describe Answer do
-  let!(:question) { create :question, :with_all_the_best_answers }
-  let!(:another_question) { create :question, :with_all_the_best_answers }
-  let!(:best_answer) { create :answer, question: question }
-  let!(:another_best_answer) { create :answer, question: another_question }
+  let(:question) { create :question, :with_all_the_best_answers }
+  let(:another_question) { create :question, :with_all_the_best_answers }
+  let(:best_answer) { create :answer, question: question }
+  let(:another_best_answer) { create :answer, question: another_question }
 
   it { should respond_to :body }
   it { should respond_to :best }
@@ -42,6 +42,38 @@ describe Answer do
 
     it 'should be first' do
       expect(question.answers.first).to eq best_answer
+    end
+  end
+
+  describe 'reputation' do
+    let(:user) { create :user }
+    let(:question) { create :question }
+    subject { build :answer, user: user, question: question }
+
+    it 'should calculate reputation after create' do
+      expect(Reputation).to receive(:calculate).with(subject)
+      subject.save!
+    end
+
+    it 'should not calculate reputation after update' do
+      subject.save!
+      expect(Reputation).not_to receive(:calculate)
+      subject.update(body: '1234')
+    end
+  end
+
+  context 'when create' do
+    let(:subscriber) { create :user }
+    it 'emails to question\'s author' do
+      expect(AuthorMailer).to receive(:new_answer)
+                                  .with(question.user, anything).and_call_original.exactly(2).times
+      create(:answer, question: question)
+    end
+
+    it 'emails to subscribers' do
+      question.subscribers << subscriber
+      expect(SubscriptionMailer).to receive(:new_answer).with(subscriber, anything).exactly(2).and_call_original
+      create(:answer, question: question)
     end
   end
 end
