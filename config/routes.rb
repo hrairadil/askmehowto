@@ -36,6 +36,8 @@ Rails.application.routes.draw do
     end
   end
 
+  match 'search', to: 'search#search', via: :get, as: :search
+
   namespace :api do
     namespace :v1 do
       resources :profiles do
