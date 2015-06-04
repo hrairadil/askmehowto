@@ -18,3 +18,5 @@ config/private_pub.yml
 
 #ignore uploaded files
 /public/uploads
+config/*.sphinx.conf
+db/sphinx

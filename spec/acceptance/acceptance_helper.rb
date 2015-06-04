@@ -11,6 +11,8 @@ RSpec.configure do |config|
   #database cleaner configuration
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
+    ThinkingSphinx::Test.init
+    ThinkingSphinx::Test.start_with_autostop
   end
 
   config.before(:each) do
@@ -19,6 +21,7 @@ RSpec.configure do |config|
 
   config.before(:each, js: true) do
     DatabaseCleaner.strategy = :truncation
+    index
   end
 
   config.before(:each) do
@@ -28,4 +31,6 @@ RSpec.configure do |config|
   config.after(:each) do
     DatabaseCleaner.clean
   end
+
+  config.include SphinxHelpers, type: :feature
 end
